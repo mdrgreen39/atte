@@ -1,6 +1,11 @@
 version: '3.8'
 
 services:
+  php:
+    build: ./docker/php
+    volumes:
+      - ./src:/var/www/
+
   nginx:
     image: nginx:1.21.1
     ports:
@@ -11,13 +16,9 @@ services:
     depends_on:
       - php
 
-  php:
-    build: ./docker/php
-    volumes:
-      - ./src:/var/www/
-
   mysql:
     image: mysql:8.0.26
+    platform: linux/x86_64
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laravel_db
