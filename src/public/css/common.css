@@ -1,0 +1,86 @@
+html,
+body {
+    height: 100%;
+    background-color: #f2f2f2;
+}
+
+input::placeholder {
+    color: #909090;
+}
+
+/* ヘッダー */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    padding: 0 32px;
+    background-color: #fff;
+    color: #000;
+}
+
+.header__logo {
+    margin-right: auto;
+    font-size: 32px;
+    color: #000;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+}
+
+.header-nav__list {
+    display: flex;
+    list-style: none;
+}
+
+.header-nav__button {
+    display: inline;
+}
+
+.header-nav__item,
+.header-nav__button-submit {
+    text-decoration: none;
+    color: #fff;
+    background: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+}
+
+.header-nav__item:not(:last-child) {
+    margin-right: 32px;
+}
+
+/* コンテンツ */
+.content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #f2f2f2;
+}
+
+.content__heading {
+    margin: 48px 0 0;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+/* フッター */
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    padding: 0 32px;
+    background-color: #fff;
+    color: #000;
+}
+
+    .footer__logo {
+        font-size: 14px;
+        font-weight: bold;
+        color: #000;
+    }
