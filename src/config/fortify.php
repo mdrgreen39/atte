@@ -2,6 +2,7 @@
 
 use App\Providers\RouteServiceProvider;
 use Laravel\Fortify\Features;
+use App\Http\Requests\RegisterRequest;
 
 return [
 
@@ -155,6 +156,8 @@ return [
             'confirmPassword' => true,
             // 'window' => 0,
         ]),
+
     ],
+
 
 ];

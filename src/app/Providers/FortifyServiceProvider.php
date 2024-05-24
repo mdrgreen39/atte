@@ -40,8 +40,6 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(10)->by($email . $request->ip());
         });
 
-        $this->app->bind(FortifyLoginRequest::class, LoginRequest::class);
-
     }
 
     public function register(): void
@@ -50,5 +48,11 @@ class FortifyServiceProvider extends ServiceProvider
             RegisteredUserController::class,
             RegisterController::class
         );
+
+        $this->app->singleton(
+            FortifyLoginRequest::class,
+            LoginRequest::class
+        );
+
     }
 }

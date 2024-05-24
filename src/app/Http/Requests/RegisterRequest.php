@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FortifyLoginRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,22 +24,28 @@ class LoginRequest extends FortifyLoginRequest
     public function rules()
     {
         return [
-            'email' => ['required', 'exists:users,email', 'string', 'email', 'max:191'],
-            'password' => ['required', 'min:8', 'max:191'],
+            'name' => ['required', 'string', 'max:191'],
+            'email' => ['required', 'unique:users,email', 'string', 'email', 'max:191'],
+            'password' => ['required', 'min:8', 'max:191', 'confirmed'],
+
         ];
     }
 
     public function messages()
     {
         return [
+            'name.required' => '名前を入力してください',
+            'name.string' => '名前を文字列で入力してください',
+            'name.max' => '名前を191文字以下で入力してください',
             'email.required' => 'メールアドレスを入力してください',
-            'email.exists' => 'このメールアドレスは有効ではありません',
+            'email.unique' => 'このメールアドレスは有効ではありません',
             'email.string' => 'メールアドレスを文字列で入力してください',
             'email.email' => '有効なメールアドレス形式を入力してください',
             'email.max' => 'メールアドレスを191文字以下で入力してください',
             'password.required' => 'パスワードを入力してください',
             'password.min' => 'パスワードを8文字以上で入力してください',
             'password.max' => 'パスワードを191文字以下で入力してください',
+            'password.confirmed' => '確認用パスワードと一致しません',
         ];
     }
 }
