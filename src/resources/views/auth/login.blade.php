@@ -10,10 +10,10 @@
         ログイン
     </h2>
     <div class="login-form__inner">
-        <form class="login-form__form" action="/login" method="post">
+        <form novalidate class="login-form__form" action="/login" method="post" novalidate>
             @csrf
             <div class="login-form__group">
-                <input class="login-form__input" type="email" name="email" id="email" placeholder="メールアドレス" value="{{ old('email') }}">
+                <input class="login-form__input" type='email' name="email" id="email" placeholder="メールアドレス" value="{{ old('email') }}">
                 <p class="login-form__error-message">
                     @error('email')
                     {{ $message }}

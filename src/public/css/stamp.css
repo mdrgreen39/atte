@@ -1,0 +1,66 @@
+.stamp-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 48px;
+}
+
+.stamp-form__heading {
+    margin-bottom: 32px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.stamp-form__status--success {
+    margin-bottom: 32px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 400;
+    color: #214be0;
+}
+
+.stamp-form__status--danger {
+    margin-bottom: 32px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 400;
+    color: #cf2222;
+}
+
+.stamp-form__form {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 48px;
+    width: auto;
+    padding: 24px 80px;
+
+}
+
+@media screen and (max-width: 1200px) {
+    stamp-form__form {
+        width: 60vw;
+    }
+}
+
+.stamp-form__button {
+    padding: 80px 200px;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #000;
+    white-space: nowrap;
+    width: 100%;
+    border-radius: 6px;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+        &:hover {
+                color: #f2f2f2;
+                opacity: 0.5;
+            }
+}
+
+
+
+
+

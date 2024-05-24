@@ -2,6 +2,7 @@ html,
 body {
     height: 100%;
     background-color: #f2f2f2;
+    font-family: "Noto Sans JP", sans-serif;
 }
 
 input::placeholder {
@@ -25,6 +26,7 @@ input::placeholder {
     color: #000;
 }
 
+/* ヘッダーナビ */
 .header-nav {
     display: flex;
     align-items: center;
@@ -39,14 +41,24 @@ input::placeholder {
     display: inline;
 }
 
-.header-nav__item,
+.header-nav__link,
 .header-nav__button-submit {
+    display: inline-block;
+    padding: 8px 16px;
     text-decoration: none;
-    color: #fff;
+    color: #000;
     background: none;
     border: none;
     font: inherit;
     cursor: pointer;
+    background-color: transparent;
+        transition: color .3s ease, background-color .3s ease;
+
+        &:hover {
+            background-color: #909090;
+            color: #fff;
+            opacity: 0.5;
+        }
 }
 
 .header-nav__item:not(:last-child) {
@@ -79,8 +91,51 @@ input::placeholder {
     color: #000;
 }
 
-    .footer__logo {
-        font-size: 14px;
-        font-weight: bold;
-        color: #000;
-    }
+.footer__logo {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+}
+
+/* ページネーション */
+.pagination{
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+.pagination li:not(.active) {
+    background-color: #fff;
+    color: #2284cf;
+    border: 1px solid #d7dbde;
+    padding: 8px 16px;
+    
+}
+
+.pagination li:not(:last-child) {
+    border-right: none;
+}
+
+.pagination a {
+    color: #2284cf;
+    text-decoration: none;
+        &:hover {
+                color: #2284cf;
+                opacity: 0.5;
+            }
+}
+
+.pagination__link {
+    text-decoration: none;
+    &:hover {
+            background-color: #2284cf;
+            opacity: 0.5;
+        }
+}
+
+.active {
+    padding: 8px 16px;
+    border: 1px solid #2284cf;
+    background-color: #2284cf;
+    color: #FFF;
+}
