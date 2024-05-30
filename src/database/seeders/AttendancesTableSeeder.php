@@ -16,7 +16,7 @@ class AttendancesTableSeeder extends Seeder
      */
     public function run()
     {
-        $date = Carbon::create(2024, 5, 19);
+        $date = Carbon::create(2024, 5, 28);
         //$date = Carbon::tomorrow();
         Attendance::factory()->count(10)->create([
             'work_date' => $date,

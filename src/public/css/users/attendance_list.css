@@ -1,0 +1,102 @@
+.attendance-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 48px;
+}
+
+.attendance-list__inner {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.attendance-list__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.attendance-list__text {
+    white-space: nowrap;
+    font-size: 24px;
+    margin-right: 20px;
+}
+
+.attendance-list__search {
+    display: flex;
+    align-items: center;
+}
+
+.attendance-list__search-input-wrapper {
+    display: flex;
+    position: absolute;
+    right: 0;
+    margin-left: 20px;
+}
+
+.attendance-list__search-button {
+    padding: 8px 12px;
+    height: 48px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #214be0;
+    color: #fff;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.attendance-list__search-input {
+    display: block;
+    padding: 8px 12px;
+    height: 48px;
+    border: 2px solid #909090;
+    border-radius: 6px;
+}
+
+.attendance-list__table {
+    margin: 16px 0 16px;
+    text-align: left;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.attendance-list__row:first-child th {
+    padding: 24px 48px;
+    white-space: nowrap;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.attendance-list__row td {
+    border-bottom: 1px solid #000;
+    padding: 24px 48px;
+}
+
+.attendance-list__row:last-child td {
+    border-bottom: none;
+}
+
+.attendance-list__table th,
+.attendance-list__table td {
+    white-space: nowrap;
+    font-size: 18px;
+    width: 20%;
+}
+
+.attendance-list__table th,
+.attendance-list__table td {
+    vertical-align: middle;
+}
