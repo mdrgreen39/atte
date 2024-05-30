@@ -10,7 +10,7 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    width: 80%;
+    width: 70%;
 }
 
 .attendance-list{
@@ -55,10 +55,6 @@
     white-space: nowrap;
     border-top: 1px solid #000;
     border-bottom: 1px solid #000;
-}
-
-.attendance__label-name {
-    text-align: left;
 }
 
 .attendance__row td {

@@ -20,10 +20,10 @@ class AttendanceFactory extends Factory
         return [
             'user_id' => \App\Models\User::factory(),
             'work_date' => Carbon::today(),
-            'start_work' => $this->faker->time(),
-            'end_work' => $this->faker->time(),
-            'total_break' => $this->faker->time(),
-            'total_work' => $this->faker->time(),
+            'start_work' => $this->faker->datetime(),
+            'end_work' => $this->faker->datetime(),
+            'total_break' => $this->faker->datetime(),
+            'total_work' => $this->faker->datetime(),
         ];
     }
 }

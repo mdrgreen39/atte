@@ -7,8 +7,10 @@
 @section('nav')
 <nav class="header-nav">
     <ul class="header-nav__list">
-        <li class="header-nav__item"><a class="header-nav__link" href="/">ホーム</a></li>
-        <li class="header-nav__item"><a class="header-nav__link" href="/attendance">日付一覧</a></li>
+        <li class="header-nav__item"><a class="header-nav__link" href="{{ route('stamp') }}">ホーム</a></li>
+        <li class="header-nav__item"><a class="header-nav__link" href="{{ route('attendance') }}">日付一覧</a></li>
+        <li class="header-nav__item"><a class="header-nav__link" href="{{ route('users.index') }}">ユーザー一覧</a></li>
+        <li class="header-nav__item"><a class="header-nav__link" href="{{ route('users.attendance_list', Auth::id()) }}">ユーザー勤怠一覧</a></li>
         <li class="header-nav__item">
             <form class="header-nav__button" action="/logout" method="post" novalidate>
                 @csrf
@@ -41,7 +43,7 @@
 
         <table class="attendance__table">
             <tr class="attendance__row">
-                <th class="attendance__label-name">名前</th>
+                <th class="attendance__label">名前</th>
                 <th class="attendance__label">勤務開始</th>
                 <th class="attendance__label">勤務終了</th>
                 <th class="attendance__label">休憩時間</th>
@@ -50,19 +52,19 @@
             @foreach($attendances as $attendance)
             <tr class="attendance__row">
                 <td class="attendance__data">
-                    {{ $user->name }}
+                    {{ $attendance->user->name }}
                 </td>
                 <td class="attendance__data">
                     {{ $attendance->start_work->format('H:i:s') }}
                 </td>
                 <td class="attendance__data">
-                    {{ $attendance->end_work ? $attendance->end_work->format('H:i:s') : '-' }}
+                    {{ $attendance->end_work->format('H:i:s') }}
                 </td>
                 <td class="attendance__data">
-                    {{ $attendance->total_break ? $attendance->end_work->format('H:i:s') : '-' }}
+                    {{ $attendance->total_break->format('H:i:s') }}
                 </td>
                 <td class="attendance__data">
-                    {{ $attendance->total_work ? $attendance->total_work->format('H:i:s') : '-' }}
+                    {{ $attendance->total_work->format('H:i:s') }}
                 </td>
             </tr>
             @endforeach

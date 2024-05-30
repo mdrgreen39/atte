@@ -18,14 +18,14 @@ class AttendanceController extends Controller
 {
 
 
-     /* 打刻ページ表示 */
+    /* 打刻ページ表示 */
     public function index(Request $request)
     {
         $user = Auth::user();
-        $today = CarbonImmutable::today();
-        $attendance = Attendance::where('user_id',$user->id)->where('work_date', $today)->first();
+        $today = Carbon::today();
+        $attendance = Attendance::where('user_id', $user->id)->where('work_date', $today)->first();
 
-        if (!$user){
+        if (!$user) {
             return redirect()->route('login');
         }
 
@@ -33,7 +33,7 @@ class AttendanceController extends Controller
     }
 
     /* ログインページ表示 */
-    public function show()
+    public function showLoginForm()
     {
         return view('auth.login');
     }
@@ -42,20 +42,17 @@ class AttendanceController extends Controller
     public function startWork()
     {
         $user = Auth::user();
-        $today = CarbonImmutable::today();
-        $now = CarbonImmutable::now();
 
         $exitingAttendance = Attendance::where('user_id', $user->id)
             ->whereNull('end_work')
             ->first();
 
-        if($exitingAttendance) {
-            return redirect()->back()->with('error', '勤務終了時間が登録がされていません');
+        if ($exitingAttendance) {
+            return redirect()->back()->with('error', '勤務開始時間は登録済みです');
         }
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
-            'work_date' => $today,
             'start_work' => now()
         ]);
 
@@ -63,85 +60,37 @@ class AttendanceController extends Controller
     }
 
     /* 退勤時間登録 */
-    public function endWork (Request $request)
+    public function endWork(Request $request)
     {
         $user = Auth::user();
-        $today = CarbonImmutable::today();
-        $now = CarbonImmutable::now();
-
+        $today = Carbon::today();
+        $yesterday = Carbon::yesterday();
 
         $attendance = Attendance::where('user_id', $user->id)
-            ->where('work_date', '<=', $today)
+            ->where(function ($query) use ($today, $yesterday) {
+                $query->whereDate('start_work', $today)
+                ->orWhereDate('start_work', $yesterday);
+            })
             ->whereNull('end_work')
             ->first();
 
-dd($attendance, $today);
-        if($attendance) {
-
-            // start_workの値をデバッグ出力
-            $startWork = CarbonImmutable::parse($attendance->start_work);
-            $endWork = $now;
-            dd($startWork->toDateTimeString(), $endWork->toDateTimeString());
-
-
+        if ($attendance) {
             // 未終了の休憩があるか確認
             $unfinishedBreak = BreakTime::where('attendance_id', $attendance->id)
                 ->whereNull('end_break')
                 ->first();
 
-                if ($unfinishedBreak) {
-                    return redirect()-> back()->with('error', '休憩終了時間が登録されていません');
-                }
-
-            // 出勤から退勤までの時間を計算
-            $startWork = CarbonImmutable::parse($attendance->start_work);
-            $endWork = $now;
-
-            dd($startWork->toDateTimeString(), $endWork->toDateTimeString());
-
-            // 日付を跨いでいる場合、当日と翌日に分ける
-            if ($endWork->isNextDay($startWork)) {
-                // 現在の勤務記録を終了時間をその日の23:59:59に設定
-                $attendance->end_work = $startWork->copy()->endOfDay();
-                $totalWorkDuration = $startWork->diffInSeconds($attendance->end_work);
-
-            // 休憩時間の合計を計算
-            $breaks = $attendance->breakTimes;
-            $totalBreakDuration = 0;
-            if ($breaks->isNotEmpty()) {
-                foreach ($breaks as $break) {
-                    $startBreak = CarbonImmutable::parse($break->start_break);
-                    $endBreak = CarbonImmutable::parse($break->end_break);
-                    $totalBreakDuration += $startBreak->diffInSeconds($endBreak);
-                }
+            if ($unfinishedBreak) {
+                return redirect()->back()->with('error', '休憩終了時間が登録されていません');
             }
 
-            // 休憩時間を引いた総勤務時間を計算
-            $totalWorkDuration -= $totalBreakDuration;
+            // 出勤から退勤までの時間を計算
+            $startWork = Carbon::parse($attendance->start_work);
+            $endWork = now();
 
-            // 総勤務時間と休憩時間を保存
-            $totalWork = gmdate('H:i:s', $totalWorkDuration);
-            $totalBreak = gmdate('H:i:s', $totalBreakDuration);
-
-            $attendance->total_break = $totalBreak;
-            $attendance->total_work = $totalWork;
-            $attendance->save();
-
-            // 新しい出勤記録を作成
-            Attendance::create([
-                'user_id' => $user->id,
-                'work_date' => $endWork->toDateString(),
-                'start_work' =>$endWork->copy()->startOfDay(),
-                'end_work' => $endWork,
-                'total_break' => '00:00:00',
-            ]);
-
-            return redirect()->back()->with('message', '勤務終了時間が登録されました');
-
-        }
-
-            // 日付を跨いでいない場合の処理
-            $attendance->end_work = $endWork;
+            // 勤務日を退勤日の日付に設定
+            $attendance->work_date = $endWork->toDateString();
+            $attendance->end_work = $endWork->toDateTimeString();
             $totalWorkDuration = $startWork->diffInSeconds($endWork);
 
             // 休憩時間の合計を計算
@@ -149,8 +98,8 @@ dd($attendance, $today);
             $totalBreakDuration = 0;
             if ($breaks->isNotEmpty()) {
                 foreach ($breaks as $break) {
-                    $startBreak = CarbonImmutable::parse($break->start_break);
-                    $endBreak = CarbonImmutable::parse($break->end_break);
+                    $startBreak = Carbon::parse($break->start_break);
+                    $endBreak = Carbon::parse($break->end_break);
                     $totalBreakDuration += $startBreak->diffInSeconds($endBreak);
                 }
             }
@@ -169,7 +118,7 @@ dd($attendance, $today);
             return redirect()->back()->with('message', '勤務終了時間が登録されました');
         }
 
-        return redirect()->back()->with('error','勤務開始時間が登録されていません');
+        return redirect()->back()->with('error', '勤務開始時間が登録されていません');
     }
 
     /* 休憩時間開始登録 */
@@ -180,9 +129,9 @@ dd($attendance, $today);
         $yesterday = Carbon::yesterday();
 
         $attendance = Attendance::where('user_id', $user->id)
-            ->where(function($query) use ($today, $yesterday) {
-                $query->where('work_date', $today)
-                    ->orWhere('work_date', $yesterday);
+            ->where(function ($query) use ($today, $yesterday) {
+                $query->whereDate('start_work', $today)
+                    ->orWhereDate('start_work', $yesterday);
             })
             ->whereNull('end_work')
             ->first();
@@ -194,16 +143,16 @@ dd($attendance, $today);
                 ->first();
 
             if ($unfinishedBreak) {
-                return redirect()->back()->with('error', '休憩終了時間が登録されていません');
+                return redirect()->back()->with('error', '休憩開始時間は登録済みです');
             }
 
-        // 休憩開始を登録
-        BreakTime::create([
-            'attendance_id' => $attendance->id,
-            'start_break' => now()
-        ]);
+            // 休憩開始を登録
+            BreakTime::create([
+                'attendance_id' => $attendance->id,
+                'start_break' => now()
+            ]);
 
-        return redirect()->back()->with('message', '休憩時間を登録しました');
+            return redirect()->back()->with('message', '休憩時間を登録しました');
         }
 
         return redirect()->back()->with('error', '勤務開始時間が登録されていません');
@@ -217,20 +166,20 @@ dd($attendance, $today);
         $yesterday = Carbon::yesterday();
 
         $attendance = Attendance::where('user_id', $user->id)
-            ->where(function($query) use ($today, $yesterday) {
-                $query->where('work_date', $today)
-                    ->orWhere('work_date', $yesterday);
+            ->where(function ($query) use ($today, $yesterday) {
+                $query->whereDate('start_work', $today)
+                    ->orWhereDate('start_work', $yesterday);
             })
             ->whereNull('end_work')
             ->first();
 
-        if($attendance) {
+        if ($attendance) {
             // 未終了の休憩を習得
             $unfinishedBreak = BreakTime::where('attendance_id', $attendance->id)
                 ->whereNull('end_break')
                 ->first();
 
-            if($unfinishedBreak){
+            if ($unfinishedBreak) {
                 // 休憩終了を登録
                 $unfinishedBreak->end_break = now();
                 $unfinishedBreak->save();
@@ -248,12 +197,13 @@ dd($attendance, $today);
     public function attendance(Request $request)
     {
         $user = Auth::user();
-        $date = $request->session()->get('date',Carbon::yesterday());
+        $date = $request->session()->get('date', Carbon::yesterday());
 
-        $attendances = Attendance::whereDate('work_date', $date)->paginate(5);
+        $attendances = Attendance::with('user')
+            ->whereDate('work_date', $date)
+            ->paginate(5);
 
         return view('attendance', compact('user', 'attendances', 'date'));
-
     }
 
     public function changeDate(Request $request)
@@ -261,9 +211,9 @@ dd($attendance, $today);
         $date = Carbon::parse($request->input('date'));
         $action = $request->input('action');
 
-        if($action === 'previous') {
+        if ($action === 'previous') {
             $date->subDay();
-        }elseif($action === 'next') {
+        } elseif ($action === 'next') {
             $date->addDay();
         }
 
@@ -271,6 +221,4 @@ dd($attendance, $today);
 
         return redirect()->route('attendance');
     }
-
-
 }

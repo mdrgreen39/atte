@@ -2,7 +2,6 @@
 
 use App\Providers\RouteServiceProvider;
 use Laravel\Fortify\Features;
-use App\Http\Requests\RegisterRequest;
 
 return [
 
@@ -88,7 +87,7 @@ return [
     |
     */
 
-    'prefix' => '',
+    'prefix' => 'auth',
 
     'domain' => null,
 
@@ -103,7 +102,7 @@ return [
     |
     */
 
-    'middleware' => ['web'],
+    'middleware' => ['web', 'verified'],
 
     /*
     |--------------------------------------------------------------------------
@@ -147,17 +146,15 @@ return [
 
     'features' => [
         Features::registration(),
-        Features::resetPasswords(),
-        // Features::emailVerification(),
-        Features::updateProfileInformation(),
-        Features::updatePasswords(),
+        //Features::resetPasswords(),
+        Features::emailVerification(),
+        //Features::updateProfileInformation(),
+        //Features::updatePasswords(),
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,
             // 'window' => 0,
         ]),
-
     ],
-
 
 ];
