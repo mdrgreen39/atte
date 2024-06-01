@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Controller;
+use App\Events\EmailVerified;
+use App\Models\User;
 
 
 class EmailVerificationController extends Controller
@@ -19,6 +21,7 @@ class EmailVerificationController extends Controller
     {
         $request->fulfill();
         event(new Verified($request->user()));
+
         return redirect('/dashboard')->with('verified', true);
     }
 
@@ -28,4 +31,6 @@ class EmailVerificationController extends Controller
 
         return back()->with('message', 'Verification link sent!');
     }
+
+
 }
