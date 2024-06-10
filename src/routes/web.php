@@ -55,12 +55,16 @@ Route::middleware('auth')->group(function ()
     Route::get('/attendance', [AttendanceController::class, 'attendance'])->name('attendance');
     Route::post('/attendance/change-date', [AttendanceController::class, 'changeDate'])->name('change-date');
 
+});
+
+Route::group(['middleware' => ['permission:edit']], function() {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{id}/attendance_list', [UserController::class, 'attendanceList'])->name('users.attendance_list');
-    Route::get('/users/filter', [UserController::class, 'filter'])->name('attendance_list.filter');
-
-
+    Route::get('/users/attendance_list', [UserController::class, 'searchAttendanceList'])->name('users.attendance_list.search');
+    //Route::get('/users/filter', [UserController::class, 'filter'])->name('attendance_list.filter');
 });
+
+
 
 Route::get('/email/verify', [EmailVerificationController::class, 'show'])->middleware('auth')->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware(['auth', 'signed'])->name('verification.verify');

@@ -1,5 +1,4 @@
 .attendance-list {
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,16 +17,15 @@
 .attendance-list__item {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     text-align: center;
     width: 100%;
-    margin-bottom: 32px;
 }
 
 .attendance-list__text {
     white-space: nowrap;
     font-size: 24px;
-    margin-right: 20px;
 }
 
 .attendance-list__search {
@@ -37,9 +35,16 @@
 
 .attendance-list__search-input-wrapper {
     display: flex;
-    position: absolute;
-    right: 0;
-    margin-left: 20px;
+    margin-bottom: 16px;
+}
+
+.attendance-list__search-input-label {
+    display: flex;
+    white-space: nowrap;
+}
+
+.attendance-list__search-action {
+    display: flex;
 }
 
 .attendance-list__search-button {
@@ -48,6 +53,7 @@
     margin-left: 5px;
     border: none;
     border-radius: 6px;
+    white-space: nowrap;
     font-size: 16px;
     background-color: #214be0;
     color: #fff;
@@ -99,4 +105,18 @@
 .attendance-list__table th,
 .attendance-list__table td {
     vertical-align: middle;
+}
+
+.attendance-list__status {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    white-space: nowrap;
+    width: 100%;
 }

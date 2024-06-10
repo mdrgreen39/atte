@@ -34,6 +34,7 @@
 }
 
 .register-form__error-message {
+    white-space: nowrap;
     color: #cf2222;
 }
 

@@ -34,5 +34,6 @@ class AuthServiceProvider extends ServiceProvider
                 ->action('Verify Email Address', $url)
                 ->line('If you did not create an account, no further action is required.');
         });
+
     }
 }

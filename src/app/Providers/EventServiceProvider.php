@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Listeners\AssignUserRole;
 use App\Events\EmailVerified;
 use App\Listeners\SendConfirmationEmail;
 use App\Listeners\SendVerifiedEmail;
@@ -22,6 +23,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendConfirmationEmail::class,
+            AssignUserRole::class,
         ],
 
         EmailVerified::class => [
@@ -31,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
         Verified::class => [
             SendVerifiedEmail::class,
         ],
+
     ];
 
     /**

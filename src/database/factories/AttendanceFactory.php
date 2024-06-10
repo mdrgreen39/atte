@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Attendance;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,9 +18,11 @@ class AttendanceFactory extends Factory
      */
     public function definition()
     {
+        $user = User::inRandomOrder()->first();
+
         return [
-            'user_id' => \App\Models\User::factory(),
-            'work_date' => Carbon::today(),
+            'user_id' => $user->id,
+            'work_date' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'start_work' => $this->faker->datetime(),
             'end_work' => $this->faker->datetime(),
             'total_break' => $this->faker->datetime(),
