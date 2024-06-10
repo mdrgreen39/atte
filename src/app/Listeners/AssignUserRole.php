@@ -2,13 +2,12 @@
 
 namespace App\Listeners;
 
-use Illuminate\Auth\Events\Verified;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifiedEmail;
+use Spatie\Permission\Models\Role;
 
-class SendVerifiedEmail
+class AssignUserRole
 {
     /**
      * Create the event listener.
@@ -23,11 +22,16 @@ class SendVerifiedEmail
     /**
      * Handle the event.
      *
-     * @param  \Illuminate\Auth\Events\Verified  $event
+     * @param  object  $event
      * @return void
      */
-    public function handle(Verified $event)
+    public function handle(Registered $event)
     {
-        Mail::to($event->user->email)->send(new VerifiedEmail($event->user));
+        $user = $event->user;
+
+        $userRole = Role::firstOrCreate(['name' => 'user']);
+
+        $user->assignRole($userRole);
+
     }
 }

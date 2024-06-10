@@ -24,26 +24,54 @@
 @section('content')
 
 
-
 <div class="attendance-list">
     <div class="attendance-list__inner">
         <div class="attendance-list__item">
-            <p class="attendance-list__text">{{ $user->name }}の勤怠表</p>
-            <form class="attendance-list__search" action="{{ route('attendance_list.filter') }}" method="get">
+            <form class="attendance-list__search" action=" {{ route('users.attendance_list.search') }}" method="get">
                 @csrf
                 <div class="attendance-list__search-input-wrapper">
-                    <input class="attendance-list__search-date" type="date" name="start_date">
-                    <input class="attendance-list__search-date" type="date" name="end_date">
-                    <button class="attendance-list__search-button" type="submit">検索</button>
+                    <div class="attendance-list__search-input-label">
+                        <input class="attendance-list__search-input" type="text" name="name" id="name" placeholder="名前" value="{{ request('name') }}">
+                    </div>
+                    <div class="attendance-list__search-input-label">
+                        <input class="attendance-list__search-input" type="date" name="start_date" id="start_date" value="{{ request('start_date') }}">
+                    </div>
+                    <div class="attendance-list__search-input-label">
+                        <input class="attendance-list__search-input" type="date" name="end_date" id="end_date" value="{{ request('end_date') }}">
+                    </div>
+                    <div class="attendance-list__search-action">
+                        <button class="attendance-list__search-button" type="submit">検索</button>
+                        <button class="attendance-list__search-button" type="submit" name="reset" value="true">リセット</button>
+                    </div>
+
                 </div>
-
-
             </form>
 
+            @php
+            $users = $users ?? collect();
+            @endphp
 
+            @if($users->isNotEmpty())
+            <h2 class="">検索結果</h2>
+            <ul class="">
+                @foreach($users as $user)
+                <li class="">
+                    <form class="" action="{{ url('/users/attendance_list') }}" method="get">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $user->id }}">
+                        <input type="hidden" name="name" value="{{ request('name') }}">
+                        <input type="hidden" name="start_date" value="{{ request('start_date') }}">
+                        <input type="hidden" name="end_date" value="{{ request('end_date') }}">
+                        <button class="" type="submit">{{ $user->name }}</button>
+                    </form>
+                </li>
+                @endforeach
+            </ul>
+            @elseif($selectedUser)
+            <h2 class="attendance-list__text">{{ $selectedUser->name }}の勤怠表</h2>
         </div>
 
-        @if ($attendances->count() > 0)
+        @if ($hasSearchCondition)
         <table class="attendance-list__table">
             <tr class="attendance-list__row">
                 <th class="attendance-list__label">日付</th>
@@ -52,7 +80,7 @@
                 <th class="attendance-list__label">休憩時間</th>
                 <th class="attendance-list__label">勤務時間</th>
             </tr>
-            @foreach($attendances as $attendance)
+            @foreach($attendanceList as $attendance)
             <tr class="attendance-list__row">
                 <td class="attendance-list__data">
                     @if($attendance->work_date)
@@ -92,9 +120,16 @@
             </tr>
             @endforeach
         </table>
-        {{ $attendances->appends(request()->query())->links('vendor.pagination.custom') }}
+        {{ $attendanceList->appends(request()->query())->links('vendor.pagination.custom') }}
         @else
-        <p>No attendance records found.</p>
+        <div class="attendance-list__status">
+            <p class="attendance-list__status-text">No attendance records found.</p>
+        </div>
+        @endif
+        @else
+        <div class="attendance-list__status">
+            <p class="attendance-list__status-text">No attendance users found.</p>
+        </div>
         @endif
     </div>
 </div>

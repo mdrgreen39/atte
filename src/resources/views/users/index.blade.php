@@ -26,23 +26,24 @@
 <div class="user">
     <div class="user-inner">
         <div class="user-list">
-            <p class="user-list__text">ユーザー一覧</p>
+            <h2 class="user-list__text">ユーザー一覧</h2>
             <form class="user-list__search" action=" {{ route('users.index') }}" method="get">
                 @csrf
                 <div class="user-list__search-input-wrapper">
-                    <input class="user-list__search-input" type="text" name="keyword" placeholder="IDまたは名前で検索" value="{{ request('keyword') }}">
+                    <input class="user-list__search-input" type="text" name="name" placeholder="名前" value="{{ request('name') }}">
                     <button class="user-list__search-button" type="submit">検索</button>
+                    <button class="user-list__search-button" type="submit" name="reset" value="true">リセット</button>
                 </div>
             </form>
         </div>
-
+        @if($users->isNotEmpty())
         <table class="user__table">
             <tr class="user__row">
                 <th class="user__label">ユーザーID</th>
                 <th class="user__label">名前</th>
                 <th class="attendance__label">メールアドレス</th>
-                <th class="attendance__label">アクション</th>
             </tr>
+
             @foreach($users as $user)
             <tr class="user__row">
                 <td class="user__data">
@@ -54,14 +55,17 @@
                 <td class="user__data">
                     {{ $user->email }}
                 </td>
-                <td class="user__data">
-                    <a class="user__date-link" href="{{ route('users.attendance_list', $user->id) }}">勤怠表を見る</a>
-                </td>
             </tr>
             @endforeach
         </table>
 
         {{ $users->appends(request()->query())->links('vendor.pagination.custom') }}
+
+        @else
+        <div class="attendance-list__status">
+            <p class="attendance-list__status-text">No users found.</p>
+        </div>
+        @endif
 
     </div>
 </div>

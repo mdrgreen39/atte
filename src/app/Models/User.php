@@ -14,6 +14,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -48,6 +49,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmail);
+    }
+
+    public function getRoleNameAttribute()
+    {
+        return $this->roles->pluck('name');
+    }
+
+    public function getPermissionNamesAttribute()
+    {
+        return $this->getAllPermissions()->pluck('name');
     }
 
     public function attendances()

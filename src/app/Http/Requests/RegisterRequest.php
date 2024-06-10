@@ -38,7 +38,7 @@ class RegisterRequest extends FormRequest
             'name.string' => '名前を文字列で入力してください',
             'name.max' => '名前を191文字以下で入力してください',
             'email.required' => 'メールアドレスを入力してください',
-            'email.unique' => 'このメールアドレスは有効ではありません',
+            'email.unique' => 'このアカウントはすでに登録済みです',
             'email.string' => 'メールアドレスを文字列で入力してください',
             'email.email' => '有効なメールアドレス形式を入力してください',
             'email.max' => 'メールアドレスを191文字以下で入力してください',
