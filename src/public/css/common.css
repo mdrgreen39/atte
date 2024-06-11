@@ -94,6 +94,7 @@ input::placeholder {
     position: relative;
     display: flex;
     flex-direction: column;
+    height: 100%;
     margin-top: 100px;
     margin-bottom: 50px;
     background-color: #f2f2f2;
@@ -175,11 +176,4 @@ input::placeholder {
     .header, .footer {
         padding: 10px;
     }
-}
-.content-scroll {
-    flex: 1;
-    overflow: auto;
-    padding: 10px;
-
-    white-space: nowrap;
 }

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -33,6 +34,10 @@ class AuthServiceProvider extends ServiceProvider
                 ->line('Click the button below to verify your email address.')
                 ->action('Verify Email Address', $url)
                 ->line('If you did not create an account, no further action is required.');
+        });
+
+        Gate::define('viewEmailVerification', function ($user) {
+            return $user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail();
         });
 
     }

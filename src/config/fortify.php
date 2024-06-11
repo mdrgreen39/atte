@@ -166,6 +166,6 @@ return [
         'create' => CreateNewUser::class,
     ],
 
-    'verify_email' => EmailVerificationPromptController::class,
+    //'verify_email' => EmailVerificationController::class,
 
 ];

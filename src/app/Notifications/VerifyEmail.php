@@ -2,14 +2,17 @@
 
 namespace App\Notifications;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\URL;
 
-class VerifyEmail extends Notification
+class VerifyEmail extends Notification implements ShouldQueue
 {
+    use Queueable;
 
     /**
      * Create a new notification instance.
@@ -40,20 +43,17 @@ class VerifyEmail extends Notification
      */
     public function toMail($notifiable)
     {
-        $verificationUrl = $this->verificationUrl($notifiable);
+        $url = URL::signedRoute
+        ('verification.verify', ['token' => $notifiable->emil_verification_token]);
+
+        Log::info($url);
 
         return (new MailMessage)
-                    ->subject('Verify Your Email Address')
-                    ->line('Please click the button below to verify your email address.')
-                    ->action('Verify Email Address', $verificationUrl)
-                    ->line('If you did not create an account, no further action is required.');
-    }
+                    ->subject('Confirm Your Email Address')
+                    ->line('Please confirm your email address by clicking the link below:')
+                    ->action('Confirm Email', $url)
+                    ->line('Thank you for using our application!');
 
-    protected function verificationUrl($notifiable)
-    {
-        return URL::temporarySignedRoute(
-            'verification.verify', now()->addMinutes(60), ['id' => $notifiable->getKey()]
-        );
     }
 
     /**
