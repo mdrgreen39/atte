@@ -72,13 +72,17 @@ class UserController extends Controller
         if($hasSearchCondition) {
             $query = User::query();
 
-            if ($request->filled('name')) {
-                $name = $request->name;
-                $names = preg_replace('/\s+/', '', $name);
-                $query->where(DB::raw('REPLACE(name, " ", "")'), 'like', '%' . $names . '%');
+            if ($request->filled('id')) {
+                $query->where('id', $request->id);
             }
 
-            $users = $query->get();
+            if ($request->filled('name')) {
+                $name = $request->name;
+                $names = preg_replace('/\s|　+/', '', $name);
+                $query->where(DB:: raw('REPLACE(REPLACE(name, " ", ""), "　", "")'), 'like', '%' . $names . '%');
+            }
+
+            $users = $query->paginate(5);
 
             if ($users->count() === 1) {
                 $selectedUser = $users->first();$userAttendance = $selectedUser->attendances();

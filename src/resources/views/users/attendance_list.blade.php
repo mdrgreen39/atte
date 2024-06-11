@@ -31,6 +31,9 @@
                 @csrf
                 <div class="attendance-list__search-input-wrapper">
                     <div class="attendance-list__search-input-label">
+                        <input class="attendance-list__search-input" type="text" name="id" id="name" placeholder="ID" value="{{ request('id') }}" autocomplete="off">
+                    </div>
+                    <div class="attendance-list__search-input-label">
                         <input class="attendance-list__search-input" type="text" name="name" id="name" placeholder="名前" value="{{ request('name') }}">
                     </div>
                     <div class="attendance-list__search-input-label">
@@ -52,21 +55,29 @@
             @endphp
 
             @if($users->isNotEmpty())
-            <h2 class="">検索結果</h2>
-            <ul class="">
+            <h2 class="attendance-list__text">検索結果</h2>
+            <table class="attendance-list__table">
+                <tr class="attendance-list__row">
+                    <th class="attendance-list__label">ID</th>
+                    <th class="attendance-list__label">名前</th>
+                </tr>
                 @foreach($users as $user)
-                <li class="">
-                    <form class="" action="{{ url('/users/attendance_list') }}" method="get">
-                        @csrf
-                        <input type="hidden" name="id" value="{{ $user->id }}">
-                        <input type="hidden" name="name" value="{{ request('name') }}">
-                        <input type="hidden" name="start_date" value="{{ request('start_date') }}">
-                        <input type="hidden" name="end_date" value="{{ request('end_date') }}">
-                        <button class="" type="submit">{{ $user->name }}</button>
-                    </form>
-                </li>
+                <form class="attendance-list__search" action="{{ url('/users/attendance_list') }}" method="get">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $user->id }}">
+                    <input type="hidden" name="name" value="{{ request('name') }}">
+                    <input type="hidden" name="start_date" value="{{ request('start_date') }}">
+                    <input type="hidden" name="end_date" value="{{ request('end_date') }}">
+                    <tr class="attendance-list__row">
+                        <td class="attendance-list__data">{{ $user->id }}</td>
+                        <td class="attendance-list__data">{{ $user->name }}</td>
+                    </tr>
+                </form>
                 @endforeach
-            </ul>
+            </table>
+
+            {{ $users->appends(request()->query())->links('vendor.pagination.custom') }}
+
             @elseif($selectedUser)
             <h2 class="attendance-list__text">{{ $selectedUser->name }}の勤怠表</h2>
         </div>
