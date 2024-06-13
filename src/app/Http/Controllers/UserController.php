@@ -60,7 +60,7 @@ class UserController extends Controller
             return redirect('/users/attendance_list');
         }
 
-        $hasSearchCondition = $request->filled('name') || $request->filled('start_date') || $request->filled('end_date');
+        $hasSearchCondition = $request->filled('id') || $request->filled('name') || $request->filled('start_date') || $request->filled('end_date');
 
 
         //$users = User::query()->get();
@@ -82,6 +82,24 @@ class UserController extends Controller
                 $query->where(DB:: raw('REPLACE(REPLACE(name, " ", ""), "　", "")'), 'like', '%' . $names . '%');
             }
 
+            if ($request->filled('id')) {
+                $selectedUser = $query->first();
+                if ($selectedUser) {
+                    $userAttendance = $selectedUser->attendances();
+
+                    if ($request->filled('start_date') && $request->filled('end_date')) {
+                        $userAttendance->whereBetween('work_date', [$request->start_date, $request->end_date]);
+                    } elseif ($request->filled('start_date')) {
+                        $userAttendance->where('work_date', '>=', $request->start_date);
+                    } elseif ($request->filled('end_date')) {
+                        $userAttendance->where('work_date', '<=', $request->end_date);
+                    }
+                    $attendanceList = $userAttendance->paginate(5);
+
+                    return view('users.attendance_list', compact('users', 'attendanceList', 'selectedUser', 'hasSearchCondition'));
+                }
+            }
+
             $users = $query->paginate(5);
 
             if ($users->count() === 1) {
@@ -98,8 +116,6 @@ class UserController extends Controller
                 $attendanceList = $userAttendance->paginate(5);
             }
         }
-        $users = $users->count() > 1 ? $users : collect();
-
 
         return view('users.attendance_list', compact('users', 'attendanceList', 'selectedUser', 'hasSearchCondition'));
 

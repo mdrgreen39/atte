@@ -6,12 +6,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Auth\Notifications\VerifyEmail as VerifyEmailBase;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\URL;
 
-class VerifyEmail extends Notification implements ShouldQueue
+class VerifyEmail extends VerifyEmailBase implements ShouldQueue
 {
+
     use Queueable;
 
     /**
@@ -21,7 +23,7 @@ class VerifyEmail extends Notification implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        Log::info('VerifyEmail notification instance created.');
     }
 
     /**
@@ -36,6 +38,22 @@ class VerifyEmail extends Notification implements ShouldQueue
     }
 
     /**
+     * Get the verification URL for the given notifiable.
+     *
+     * @param  mixed  $notifiable
+     * @return string
+     */
+    public function verificationUrl($notifiable)
+    {
+        return URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinute(60),
+            ['id' => $notifiable->getkey(), 'hash' => sha1($notifiable->getEmailForVerification())]
+        );
+    }
+
+
+    /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
@@ -43,15 +61,13 @@ class VerifyEmail extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $url = URL::signedRoute
-        ('verification.verify', ['token' => $notifiable->emil_verification_token]);
 
-        Log::info($url);
+        Log::info('Building email for user: ' . $notifiable->email);
 
         return (new MailMessage)
                     ->subject('Confirm Your Email Address')
                     ->line('Please confirm your email address by clicking the link below:')
-                    ->action('Confirm Email', $url)
+                    ->action('Confirm Email', $this->verificationUrl($notifiable))
                     ->line('Thank you for using our application!');
 
     }

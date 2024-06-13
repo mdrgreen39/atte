@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\User;
 
 class ConfirmEmail extends Mailable
 {
@@ -18,7 +19,7 @@ class ConfirmEmail extends Mailable
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct(User $user)
     {
         $this->user = $user;
     }
@@ -32,6 +33,10 @@ class ConfirmEmail extends Mailable
     {
         return $this->view('emails.confirm')
                     ->subject('Confirm your email address')
-                    ->with(['user' => $this->user]);
+                    ->with([
+                        'user' => $this->user,
+                        'email_verification_token' => $this->user->email_verification_token,
+                    ]);
+
     }
 }
