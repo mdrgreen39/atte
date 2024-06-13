@@ -69,16 +69,46 @@ class AttendanceController extends Controller
         $today = Carbon::today();
         $yesterday = Carbon::yesterday();
 
+        //前日の未終了の勤務を確認
         $previousAttendance = Attendance::where('user_id', $user->id)
             ->whereDate('start_work', $yesterday)
             ->whereNull('end_work')
             ->first();
 
+        //前日の勤務レコードを作成
         if ($previousAttendance) {
-            $previousAttendance->end_work = $yesterday->endOfDay();
+
+            //前日の勤務終了時間を23:59:59に設定
+            $previousAttendance->end_work = $yesterday->endOfDay()->toDateTimeString();
+
+            //出勤から退勤までの時間を計算
+            $startWork = Carbon::parse($previousAttendance->start_work);
+            $totalWorkDuration = $startWork->diffInSeconds($yesterday->endOfDay());
+
+            //休憩時間の合計を計算
+            $breaks = $previousAttendance->breakTimes;
+            $totalBreakDuration = 0;
+            if ($breaks->isNotEmpty()) {
+                foreach ($breaks as $break) {
+                    $startBreak = Carbon::parse($break->start_break);
+                    $endBreak = Carbon::parse($break->end_break ?? $yesterday->endOfDay());
+                    $totalBreakDuration += $startBreak->diffInSeconds($endBreak);
+                }
+            }
+
+            //休憩を引いた総勤務時間を計算
+            $totalWorkDuration -= $totalBreakDuration;
+
+            //総勤務時間と休憩時間を保存
+            $totalWork = gmdate('H:i:s', $totalWorkDuration);
+            $totalBreak = gmdate('H:i:s', $totalBreakDuration);
+
+            $previousAttendance->total_blear = $totalBreak;
+            $previousAttendance->total_work = $totalWork;
             $previousAttendance->save();
         }
 
+        //現在の出勤記録を習得
         $currentAttendance = Attendance::where('user_id', $user->id)
             ->where(function ($query) use ($today, $yesterday) {
                 $query->whereDate('start_work', $today)
@@ -87,8 +117,8 @@ class AttendanceController extends Controller
             ->whereNull('end_work')
             ->first();
 
+        // 未終了の休憩があるか確認
         if ($currentAttendance) {
-            // 未終了の休憩があるか確認
             $unfinishedBreak = BreakTime::where('attendance_id', $currentAttendance->id)
                 ->whereNull('end_break')
                 ->first();

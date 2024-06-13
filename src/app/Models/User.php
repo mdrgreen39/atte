@@ -28,7 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'email_verification_token',
+        //'email_verification_token',
 
     ];
 
@@ -51,14 +51,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public static function boot()
-    {
-        parent::boot();
+    //public static function boot()
+    //{
+        //parent::boot();
 
-        static::creating(function ($user) {
-            $user->email_verification_token = Str::random(64);
-        });
-    }
+        //static::creating(function ($user) {
+        //    $user->email_verification_token = Str::random(64);
+        //});
+    //}
 
 
     public function sendEmailVerificationNotification()

@@ -31,7 +31,7 @@
                 @csrf
                 <div class="attendance-list__search-input-wrapper">
                     <div class="attendance-list__search-input-label">
-                        <input class="attendance-list__search-input" type="text" name="id" id="name" placeholder="ID" value="{{ request('id') }}" autocomplete="off">
+                        <input class="attendance-list__search-input" type="text" name="id" id="id" placeholder="ID" value="{{ request('id') }}" autocomplete="off">
                     </div>
                     <div class="attendance-list__search-input-label">
                         <input class="attendance-list__search-input" type="text" name="name" id="name" placeholder="名前" value="{{ request('name') }}">

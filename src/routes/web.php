@@ -50,12 +50,20 @@ Route::group(['middleware' => 'web'], function () {
         ->name('logout');
 });
 
-Route::get('/email/verify/{token}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+Route::middleware(['auth', 'signed', 'throttle:6.1'])->group(function() {
+    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+});
 
-//メールアドレス確認リンク送信
-//Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-//   ->middleware(['auth', 'throttle:6,1'])
-//    ->name('verification.send');
+
+//期限付きなしメール確認
+//Route::get('/email/verify/{token}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+
+Route::get('email/verify', [EmailVerificationController::class, 'show'])->name('verification.notice');
+
+
+Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');
 
 //メールアドレス確認
 //Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
@@ -69,7 +77,9 @@ Route::get('/email/verify/{token}', [EmailVerificationController::class, 'verify
 
 Route::middleware('auth')->group(function ()
 {
-    Route::get('/', [AttendanceController::class, 'index'])->name('stamp');
+    Route::get('/', [AttendanceController::class, 'index'])
+        ->middleware('verified')
+        ->name('stamp');
     Route::post('/start-work', [AttendanceController::class, 'startWork'])->name('start-work');
     Route::post('/end-work', [AttendanceController::class, 'endWork'])->name('end-work');
     Route::post('/start-break', [AttendanceController::class, 'startBreak'])->name('start-break');
