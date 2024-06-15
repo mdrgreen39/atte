@@ -23,7 +23,7 @@ class VerifyEmail extends VerifyEmailBase implements ShouldQueue
      */
     public function __construct()
     {
-        Log::info('VerifyEmail notification instance created.');
+        //
     }
 
     /**
@@ -62,11 +62,9 @@ class VerifyEmail extends VerifyEmailBase implements ShouldQueue
     public function toMail($notifiable)
     {
 
-        Log::info('Building email for user: ' . $notifiable->email);
-
         return (new MailMessage)
                     ->subject('Confirm Your Email Address')
-                    ->line('Please confirm your email address by clicking the link below:')
+                    ->line('確認してください!Please confirm your email address by clicking the link below:')
                     ->action('Confirm Email', $this->verificationUrl($notifiable))
                     ->line('Thank you for using our application!');
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Controller;
@@ -30,12 +32,35 @@ class EmailVerificationController extends Controller
         //return redirect('/login')->with('message', 'Email verified!');
     //}
 
-    public function verify(EmailVerificationRequest $request)
+    public function verify(Request $request, $id, $hash)
     {
-        $request->fulfill();
-        event(new Verified($request->user()));
+        $user = User::findOrFail($id);
 
-        return redirect('/login')->with('message', 'Email verified!');
+        // ハッシュが一致するかどうかを確認
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return redirect('/login')->withErrors(['email' => 'Invalid verification link.']);
+        }
+
+        // ユーザーがすでにメールを確認済みである場合
+        if ($user->hasVerifiedEmail()) {
+            return redirect('/login')->with('status', 'Your email is already verified.');
+        }
+
+        // メールアドレスを確認
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        // ログアウトしてリダイレクト
+        Auth::logout();
+
+        return view('auth.verified', ['user' => $user]);
+
+        //ミドルウェアauthを入れる場合
+        //$request->fulfill();
+        //event(new Verified($request->user()));
+
+        //return redirect('/login')->with('message', 'Email verified!');
     }
 
     public function resend(Request $request)

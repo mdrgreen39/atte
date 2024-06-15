@@ -7,6 +7,7 @@ use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\AuthenticatedController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\UserController;
@@ -38,19 +39,20 @@ Route::group(['middleware' => ['web', 'guest']], function () {
 });
 
 Route::group(['middleware' => 'web'], function () {
-    Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+    Route::get('/login', [AuthenticatedController::class, 'create'])
         ->middleware('guest')
         ->name('login');
 
-    Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    Route::post('/login', [AuthenticatedController::class, 'store'])
         ->middleware('guest');
 
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    Route::post('/logout', [AuthenticatedController::class, 'destroy'])
         ->middleware('auth')
         ->name('logout');
 });
 
-Route::middleware(['auth', 'signed', 'throttle:6.1'])->group(function() {
+
+Route::middleware(['signed', 'throttle:6.1'])->group(function() {
     Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
 });
 

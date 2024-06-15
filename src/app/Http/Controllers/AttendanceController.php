@@ -69,6 +69,28 @@ class AttendanceController extends Controller
         $today = Carbon::today();
         $yesterday = Carbon::yesterday();
 
+        // 現在の出勤記録を取得
+        $currentAttendance = Attendance::where('user_id', $user->id)
+        ->where(function ($query) use ($today, $yesterday) {
+            $query->whereDate('start_work', $today)
+                ->orWhereDate('start_work', $yesterday);
+        })
+        ->whereNull('end_work')
+        ->first();
+
+        if (!$currentAttendance) {
+            return redirect()->back()->with('error', '勤務開始時間が登録されていません');
+        }
+
+        // 未終了の休憩があるか確認
+        $unfinishedBreak = BreakTime::where('attendance_id', $currentAttendance->id)
+        ->whereNull('end_break')
+        ->first();
+
+        if ($unfinishedBreak) {
+            return redirect()->back()->with('error', '休憩終了時間が登録されていません');
+        }
+
         //前日の未終了の勤務を確認
         $previousAttendance = Attendance::where('user_id', $user->id)
             ->whereDate('start_work', $yesterday)
@@ -85,8 +107,10 @@ class AttendanceController extends Controller
             $startWork = Carbon::parse($previousAttendance->start_work);
             $totalWorkDuration = $startWork->diffInSeconds($yesterday->endOfDay());
 
-            //休憩時間の合計を計算
-            $breaks = $previousAttendance->breakTimes;
+            //前日の休憩時間の合計を計算
+            $breaks = BreakTime::where('attendance_id', $previousAttendance->id)
+                ->whereDate('start_break', $yesterday)
+                ->get();
             $totalBreakDuration = 0;
             if ($breaks->isNotEmpty()) {
                 foreach ($breaks as $break) {
@@ -100,44 +124,25 @@ class AttendanceController extends Controller
             $totalWorkDuration -= $totalBreakDuration;
 
             //総勤務時間と休憩時間を保存
-            $totalWork = gmdate('H:i:s', $totalWorkDuration);
-            $totalBreak = gmdate('H:i:s', $totalBreakDuration);
-
-            $previousAttendance->total_blear = $totalBreak;
-            $previousAttendance->total_work = $totalWork;
+            $previousAttendance->total_break = $yesterday->format('Y-m-d') . ' ' . gmdate('H:i:s', $totalBreakDuration);
+            $previousAttendance->total_work = $yesterday->format('Y-m-d') . ' ' . gmdate('H:i:s', $totalWorkDuration);
             $previousAttendance->save();
-        }
 
-        //現在の出勤記録を習得
-        $currentAttendance = Attendance::where('user_id', $user->id)
-            ->where(function ($query) use ($today, $yesterday) {
-                $query->whereDate('start_work', $today)
-                    ->orWhereDate('start_work', $yesterday);
-            })
-            ->whereNull('end_work')
-            ->first();
+            //日付を跨いでいる場合、新しい出勤記録を作成
 
-        // 未終了の休憩があるか確認
-        if ($currentAttendance) {
-            $unfinishedBreak = BreakTime::where('attendance_id', $currentAttendance->id)
-                ->whereNull('end_break')
-                ->first();
+            $newAttendance = new Attendance();
+            $newAttendance->user_id = $user->id;
+            $newAttendance->start_work = $today->startOfDay()->toDateTimeLocalString();
+            $newAttendance->work_date = $today->toDateString();
+            $newAttendance->end_work = $endWork->toDayDateTimeString();
 
-            if ($unfinishedBreak) {
-                return redirect()->back()->with('error', '休憩終了時間が登録されていません');
-            }
-
-            // 出勤から退勤までの時間を計算
-            $startWork = Carbon::parse($currentAttendance->start_work);
-
-
-            // 勤務日を退勤日の日付に設定
-            $currentAttendance->work_date = $endWork->toDateString();
-            $currentAttendance->end_work = $endWork->toDateTimeString();
+            $startWork = $today->startOfDay();
             $totalWorkDuration = $startWork->diffInSeconds($endWork);
 
-            // 休憩時間の合計を計算
-            $breaks = $currentAttendance->breakTimes;
+            //当日の休憩時間の合計を計算
+            $breaks = BreakTime::where('attendance_id', $currentAttendance->id)
+                ->whereDate('start_break', $today)
+                ->get();
             $totalBreakDuration = 0;
             if ($breaks->isNotEmpty()) {
                 foreach ($breaks as $break) {
@@ -154,14 +159,43 @@ class AttendanceController extends Controller
             $totalWork = gmdate('H:i:s', $totalWorkDuration);
             $totalBreak = gmdate('H:i:s', $totalBreakDuration);
 
-            $currentAttendance->total_break = $totalBreak;
-            $currentAttendance->total_work = $totalWork;
-            $currentAttendance->save();
+            $newAttendance->total_break = $totalBreak;
+            $newAttendance->total_work = $totalWork;
+            $newAttendance->save();
 
             return redirect()->back()->with('message', '勤務終了時間が登録されました');
+
         }
 
-        return redirect()->back()->with('error', '勤務開始時間が登録されていません');
+        // 日付を跨いでいない場合、通常の処理
+        $startWork = Carbon::parse($currentAttendance->start_work);
+        $currentAttendance->work_date = $endWork->toDateString();
+        $currentAttendance->end_work = $endWork->toDateTimeString();
+        $totalWorkDuration = $startWork->diffInSeconds($endWork);
+
+        // 休憩時間の合計を計算
+        $breaks = $currentAttendance->breakTimes;
+        $totalBreakDuration = 0;
+        if ($breaks->isNotEmpty()) {
+            foreach ($breaks as $break) {
+                $startBreak = Carbon::parse($break->start_break);
+                $endBreak = Carbon::parse($break->end_break);
+                $totalBreakDuration += $startBreak->diffInSeconds($endBreak);
+            }
+        }
+
+        // 休憩時間を引いた総勤務時間を計算
+        $totalWorkDuration -= $totalBreakDuration;
+
+        // 総勤務時間と休憩時間を保存
+        $totalWork = gmdate('H:i:s', $totalWorkDuration);
+        $totalBreak = gmdate('H:i:s', $totalBreakDuration);
+
+        $currentAttendance->total_break = $totalBreak;
+        $currentAttendance->total_work = $totalWork;
+        $currentAttendance->save();
+
+        return redirect()->back()->with('message', '勤務終了時間が登録されました');
     }
 
     /* 休憩時間開始登録 */
