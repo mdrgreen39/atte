@@ -28,9 +28,9 @@ class EventServiceProvider extends ServiceProvider
             AssignUserRole::class,
         ],
 
-        //EmailVerified::class => [
-        //    SendWelcomeEmail::class,
-        //],
+        Verified::class => [
+            SendWelcomeEmail::class,
+        ],
 
         //Verified::class => [
         //    SendVerifiedEmail::class,
