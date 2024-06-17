@@ -1,12 +1,14 @@
 @component('mail::message')
 # Email Verified Successfully
 
-Hello, {{ $user->name }}!
+ようこそ, {{ $user->name }}さん!
 
-Your email address has been successfully verified. You can now log in to your account.
+メールアドレスの確認が完了しました。<br>
+アカウントへのログインができるようになりましたので<br>
+ログイン画面よりログインしてください。
 
 @component('mail::button', ['url' => route('login')])
-Log In
+ログイン画面へ
 @endcomponent
 
 Thanks,<br>

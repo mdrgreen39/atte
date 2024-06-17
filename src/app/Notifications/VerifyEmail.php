@@ -64,7 +64,7 @@ class VerifyEmail extends VerifyEmailBase implements ShouldQueue
 
         return (new MailMessage)
                     ->subject('Confirm Your Email Address')
-                    ->line('確認してください!Please confirm your email address by clicking the link below:')
+                    ->line('以下のリンクをクリックして、メールアドレスを確認してください：')
                     ->action('Confirm Email', $this->verificationUrl($notifiable))
                     ->line('Thank you for using our application!');
 

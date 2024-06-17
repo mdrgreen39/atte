@@ -43,7 +43,7 @@ class EmailVerificationController extends Controller
 
         // ユーザーがすでにメールを確認済みである場合
         if ($user->hasVerifiedEmail()) {
-            return redirect('/login')->with('status', 'Your email is already verified.');
+            return redirect('/login')->with('status', 'このメールアドレスはすでに確認済みです!ログイン画面からログインしてください');
         }
 
         // メールアドレスを確認
@@ -54,7 +54,7 @@ class EmailVerificationController extends Controller
         // ログアウトしてリダイレクト
         Auth::logout();
 
-        return view('auth.verified', ['user' => $user]);
+        return redirect('/login')->with('status', 'メールアドレスを確認しました!ログイン画面よりログインしてください');
 
         //ミドルウェアauthを入れる場合
         //$request->fulfill();
@@ -63,16 +63,38 @@ class EmailVerificationController extends Controller
         //return redirect('/login')->with('message', 'Email verified!');
     }
 
+    public function showResendForm()
+    {
+        return view('auth.resend-verification');
+    }
+
     public function resend(Request $request)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('login');
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->route('login')->with('status', 'このメールアドレスはすでに確認済みです!ログイン画面からログインしてください');
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
 
-        return back()->with('message', 'Verification link sent!');
+        return redirect()->route('login')->with('status', '確認メールを送信しました。メールボックスをご確認ください');
     }
+
+    //public function resend(Request $request)
+    //{
+    //    if ($request->user()->hasVerifiedEmail()) {
+    //        return redirect()->route('login');
+    //    }
+
+    //    $request->user()->sendEmailVerificationNotification();
+
+    //    return back()->with('message', 'Verification link sent!');
+    //}
 
     
 

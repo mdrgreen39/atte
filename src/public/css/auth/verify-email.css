@@ -1,58 +1,55 @@
-.login-form {
+.verification-form {
     padding: 48px 0;
 }
 
-.login-form__inner {
+.verification-form__inner {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 8px;
 }
 
-.login-form__form {
+.verification-form__form {
     padding: 24px 80px;
     width: 35vw;
 }
 
 @media screen and (max-width: 1200px) {
-    .login-form__form {
+    .verification-form__form {
         width: 60vw;
     }
 }
 
-.login-form__group {
+.verification-form__group {
     margin-bottom: 32px;
 }
 
-.login-form__input {
-    display: block;
-    padding: 8px 12px;
-    width: 100%;
-    height: 48px;
-    border: 2px solid #909090;
-    border-radius: 6px;
+.verification-form__text {
+    text-align: center;
 }
 
-.login-form__success-message {
+.verification-form__success-message {
     white-space: nowrap;
     text-align: center;
     color: #214be0;
 }
 
-.login-form__error-message {
+.verification-form__error-message {
     white-space: nowrap;
     text-align: center;
     color: #cf2222;
 }
 
-.login-form__button {
+.verification-form__button {
     display: block;
-    padding: 8px 12px;
+    padding: 12px 12px;
     width: 100%;
     height: 48px;
     border: none;
     border-radius: 6px;
     font-size: 16px;
+    text-decoration: none;
+    text-align: center;
     background-color: #214be0;
     color: #fff;
     cursor: pointer;
@@ -62,16 +59,16 @@
     }
 }
 
-.login-form__link {
+.verification-form__link {
     text-align: center;
 }
 
-.login-form__link-more {
+.verification-form__link-more {
     font-size: 16px;
     color: #909090;
 }
 
-.login-form__link-register {
+.verification-form__link-login {
     text-decoration: none;
     color: #214be0;
     background-color: transparent;
