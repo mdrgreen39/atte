@@ -6,6 +6,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class AssignUserRole
 {
@@ -32,6 +33,10 @@ class AssignUserRole
         $userRole = Role::firstOrCreate(['name' => 'user']);
 
         $user->assignRole($userRole);
+
+        $editPermission = Permission::firstOrCreate(['name' => 'edit']);
+
+        $user->givePermissionTo($editPermission);
 
     }
 }

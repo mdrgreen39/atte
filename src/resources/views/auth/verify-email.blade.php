@@ -1,23 +1,31 @@
-<!DOCTYPE html>
+@extends ('layouts.app')
 
-<head>
-    <title>Email Verification</title>
-</head>
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/auth/verify-email.css') }}">
+@endsection
 
-<body>
-    <h1>Email Verification</h1>
-    <p>Thank you for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn’t receive the email, we will gladly send you another.</p>
-
-    <!--@if (session('status') == 'verification-link-sent')
-    <p>A new verification link has been sent to the email address you provided during registration.</p>
-    @endif
-
-    <form method="POST" action="{{ route('verification.send') }}">
-        @csrf
-        <button type="submit">Resend Verification Email</button>
-    </form>-->
-
-    <p><a href="{{ route('login') }}">Return to login screen</a></p>
-</body>
-
-</html>
+@section('content')
+<div class="login-form">
+    <h2 class="verification-form__heading content__heading">
+        メールアドレスの確認について
+    </h2>
+    <div class="verification-form__inner">
+        <div class="verification-form__form">
+            <div class="verification-form__group">
+                <p class="verification-form__text">登録ありがとうございます!</p>
+            </div>
+            <div class="verification-form__group">
+                <p>ログインするにはメールアドレスの確認が必要です。登録したメールアドレスにメールを送信していますので、メール内のリンクをクリックしてください。</p>
+            </div>
+            <div class="verification-form__group">
+                <p>メールが届いていない場合は、以下のボタンをクリックして再送信画面よりメールの再送信をしてください。</p>
+            </div>
+            <a class="verification-form__button" href="{{ route('verification.resend') }}">メール再送画面へ</a>
+        </div>
+        <div class="verification-form__link">
+            <p class="verification-form__link-more">すでにメール確認をしている方はこちらから</p>
+            <a class="verification-form__link-login" href="/login">ログイン</a>
+        </div>
+    </div>
+</div>
+@endsection('content')

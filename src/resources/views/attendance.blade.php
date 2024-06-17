@@ -73,13 +73,25 @@
                     {{ $attendance->start_work->format('H:i:s') }}
                 </td>
                 <td class="attendance__data">
+                    @if ($attendance->end_work)
                     {{ $attendance->end_work->format('H:i:s') }}
+                    @else
+                    -
+                    @endif
                 </td>
                 <td class="attendance__data">
+                    @if ($attendance->total_break)
                     {{ $attendance->total_break->format('H:i:s') }}
+                    @else
+                    -
+                    @endif
                 </td>
                 <td class="attendance__data">
+                    @if ($attendance->total_work)
                     {{ $attendance->total_work->format('H:i:s') }}
+                    @else
+                    -
+                    @endif
                 </td>
             </tr>
             @endforeach

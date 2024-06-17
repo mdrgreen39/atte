@@ -62,10 +62,15 @@ Route::middleware(['signed', 'throttle:6.1'])->group(function() {
 
 Route::get('email/verify', [EmailVerificationController::class, 'show'])->name('verification.notice');
 
+Route::get('/email/resend', [EmailVerificationController::class, 'showResendForm'])->name('verification.resend');
+Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend.post');
+
 
 Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
+
+
 
 //メールアドレス確認
 //Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])

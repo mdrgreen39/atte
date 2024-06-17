@@ -6,6 +6,12 @@
 
 @section('content')
 <div class="login-form">
+    @if (session('status'))
+    <div class=" login-form__success-message">
+        {{ session('status') }}
+    </div>
+    @endif
+
     <h2 class="login-form__heading content__heading">
         ログイン
     </h2>

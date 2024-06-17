@@ -94,38 +94,30 @@
             @foreach($attendanceList as $attendance)
             <tr class="attendance-list__row">
                 <td class="attendance-list__data">
-                    @if($attendance->work_date)
                     {{ $attendance->work_date }}
-                    @else
-                    N/A
-                    @endif
                 </td>
                 <td class="attendance-list__data">
-                    @if($attendance->start_work)
                     {{ $attendance->start_work->format('H:i:s')  }}
-                    @else
-                    N/A
-                    @endif
                 </td>
                 <td class="attendance-list__data">
                     @if($attendance->end_work)
                     {{ $attendance->end_work->format('H:i:s')  }}
                     @else
-                    N/A
+                    -
                     @endif
                 </td>
                 <td class="attendance-list__data">
                     @if($attendance->total_break)
                     {{ $attendance->total_break->format('H:i:s')  }}
                     @else
-                    N/A
+                    -
                     @endif
                 </td>
                 <td class="attendance-list__data">
                     @if($attendance->total_work)
                     {{ $attendance->total_work->format('H:i:s')  }}
                     @else
-                    N/A
+                    -
                     @endif
                 </td>
             </tr>

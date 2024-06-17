@@ -68,8 +68,6 @@ class AuthenticatedController extends Controller
 
         if (!$user || !Hash::check($request->password, $user->password)) {
 
-            Log::debug('Authentication failed for email: ' . $request->email);
-
             return redirect()->route('login')
             ->withErrors(__('auth.filed'));
         }

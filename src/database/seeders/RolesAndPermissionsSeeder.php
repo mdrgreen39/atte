@@ -16,23 +16,27 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run()
     {
+        // "admin" ロールの作成または取得
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
+
+        // "user" ロールの作成または取得
         $userRole = Role::firstOrCreate(['name' => 'user']);
 
+        // "edit" パーミッションの作成または取得
         $editPermission = Permission::firstOrCreate(['name' => 'edit']);
 
+        // "admin" ロールに "edit" パーミッションを付与
         $adminRole->givePermissionTo($editPermission);
 
-        $users = User::all();
-        foreach ($users as $user) {
-            $user->assignRole('user');
+        // "user" ロールに "edit" パーミッションを付与
+        //$userRole->givePermissionTo($editPermission);
 
-        $user = User::find(13);
-        $user->removeRole('user');
-        $user->assignRole('admin');
-        $user->givePermissionTo($editPermission);
+        // 必要に応じて "admin" ロールから "edit" パーミッションを削除
+        // $adminRole->revokePermissionTo($editPermission);
+
+        // 必要に応じて "user" ロールから "edit" パーミッションを削除
+        //$userRole->revokePermissionTo($editPermission);
+
 
         }
-
-    }
 }
