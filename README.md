@@ -17,9 +17,8 @@
 - 休憩開始登録
 - 休憩終了登録
 - 日付別勤怠表示
-- 管理者権限(閲覧・編集)
-- ユーザー一覧表示
-- ユーザー別勤怠表表示
+- ユーザー一覧表示、検索
+- ユーザー別勤怠表表示、検索
 
 ## 使用技術
 - php7.4.9
@@ -27,8 +26,10 @@
 - mysql8.0.26
 
 ## テーブル設計
+![art](table.png)
 
 ## ER図
+![art](atte-er.drawio.png)
 
 ## 環境構築
 **Dockerビルド**
@@ -57,6 +58,16 @@ DB_PORT=3306
 DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
+
+MAIL_MAILER=smtp
+MAIL_HOST=           //メールサーバーアドレス入力
+MAIL_PORT=           //メッセージの送信ポート
+MAIL_USERNAME=       //送信元のユーザーネーム
+MAIL_PASSWORD=       //メールサーバーのパスワード
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=  //送信元のメールアドレス
+MAIL_FROM_NAME=     //メールの送信者に表示される名前
+
 ```
 5. アプリケーションキーの作成
 ``` bash
@@ -74,3 +85,4 @@ php artisan db:seed
 ```
 
 ## 他
+- ユーザー一覧とユーザー別勤怠表示では権限により閲覧を制限していますが、今回はユーザー登録時に全員に権限を付与し、閲覧可能としています。

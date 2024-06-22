@@ -26,7 +26,7 @@
 <div class="user">
     <div class="user-inner">
         <div class="user-list">
-            <h2 class="user-list__text">ユーザー一覧</h2>
+
             <form class="user-list__search" action=" {{ route('users.index') }}" method="get">
                 @csrf
                 <div class="user-list__search-input-wrapper">
@@ -35,6 +35,7 @@
                     <button class="user-list__search-button" type="submit" name="reset" value="true">リセット</button>
                 </div>
             </form>
+            <h2 class="user-list__text">ユーザー一覧</h2>
         </div>
         @if($users->isNotEmpty())
         <table class="user__table">

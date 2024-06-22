@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEmailVerificationTokenToUsersTable extends Migration
+class ChangeWorkDateInAttendancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddEmailVerificationTokenToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('email_verification_token', 64)->nullable()->after('email');
+        Schema::table('attendances', function (Blueprint $table) {
+            $table->date('work_date')->nullable(false)->change();
         });
     }
 
@@ -25,8 +25,8 @@ class AddEmailVerificationTokenToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('email_verification_token');
+        Schema::table('attendances', function (Blueprint $table) {
+            $table->date('work_date')->nullable()->change();
         });
     }
 }
