@@ -52,10 +52,10 @@ Route::group(['middleware' => 'web'], function () {
 });
 
 
-Route::middleware(['signed', 'throttle:6.1'])->group(function() {
-    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
-});
 
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['signed', 'throttle:6.1'])
+    ->name('verification.verify');
 
 //期限付きなしメール確認
 //Route::get('/email/verify/{token}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
@@ -66,9 +66,9 @@ Route::get('/email/resend', [EmailVerificationController::class, 'showResendForm
 Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend.post');
 
 
-Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
-    ->middleware(['auth', 'throttle:6,1'])
-    ->name('verification.send');
+//Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
+//    ->middleware(['auth', 'throttle:6,1'])
+//    ->name('verification.send');
 
 
 

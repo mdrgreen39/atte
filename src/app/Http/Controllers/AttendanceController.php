@@ -16,6 +16,14 @@ use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
+    private function formatTimeFromSeconds($seconds)
+    {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds / 60) % 60);
+        $seconds = $seconds % 60;
+
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+    }
 
 
     /* 打刻ページ表示 */
@@ -124,8 +132,8 @@ class AttendanceController extends Controller
             $totalWorkDuration -= $totalBreakDuration;
 
             //総勤務時間と休憩時間を保存
-            $previousAttendance->total_break = $yesterday->format('Y-m-d') . ' ' . gmdate('H:i:s', $totalBreakDuration);
-            $previousAttendance->total_work = $yesterday->format('Y-m-d') . ' ' . gmdate('H:i:s', $totalWorkDuration);
+            $previousAttendance->total_break = $this->formatTimeFromSeconds($totalBreakDuration);
+            $previousAttendance->total_work = $this->formatTimeFromSeconds($totalWorkDuration);
             $previousAttendance->save();
 
             //日付を跨いでいる場合、新しい出勤記録を作成
@@ -134,7 +142,7 @@ class AttendanceController extends Controller
             $newAttendance->user_id = $user->id;
             $newAttendance->start_work = $today->startOfDay()->toDateTimeLocalString();
             $newAttendance->work_date = $today->toDateString();
-            $newAttendance->end_work = $endWork->toDayDateTimeString();
+            $newAttendance->end_work = $endWork;
 
             $startWork = $today->startOfDay();
             $totalWorkDuration = $startWork->diffInSeconds($endWork);
@@ -156,11 +164,11 @@ class AttendanceController extends Controller
             $totalWorkDuration -= $totalBreakDuration;
 
             // 総勤務時間と休憩時間を保存
-            $totalWork = gmdate('H:i:s', $totalWorkDuration);
-            $totalBreak = gmdate('H:i:s', $totalBreakDuration);
+            //$totalWork = $today->format('H:i:s', $totalWorkDuration);
+            //$totalBreak = $today->format('H:i:s', $totalBreakDuration);
 
-            $newAttendance->total_break = $totalBreak;
-            $newAttendance->total_work = $totalWork;
+            $newAttendance->total_break = $this->formatTimeFromSeconds($totalBreakDuration);
+            $newAttendance->total_work = $this->formatTimeFromSeconds($totalWorkDuration);
             $newAttendance->save();
 
             return redirect()->back()->with('message', '勤務終了時間が登録されました');
@@ -188,11 +196,11 @@ class AttendanceController extends Controller
         $totalWorkDuration -= $totalBreakDuration;
 
         // 総勤務時間と休憩時間を保存
-        $totalWork = gmdate('H:i:s', $totalWorkDuration);
-        $totalBreak = gmdate('H:i:s', $totalBreakDuration);
+        //$totalWork = $today->format('H:i:s', $totalWorkDuration);
+        //$totalBreak = $today->format('H:i:s', $totalBreakDuration);
 
-        $currentAttendance->total_break = $totalBreak;
-        $currentAttendance->total_work = $totalWork;
+        $currentAttendance->total_break = $this->formatTimeFromSeconds($totalBreakDuration);
+        $currentAttendance->total_work = $this->formatTimeFromSeconds($totalWorkDuration);
         $currentAttendance->save();
 
         return redirect()->back()->with('message', '勤務終了時間が登録されました');
