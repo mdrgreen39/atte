@@ -7,7 +7,7 @@
 
 ## 他のリポジトリ
 
-##　機能一覧
+## 機能一覧
 - ユーザー登録
 - ログイン
 - ログアウト
@@ -58,7 +58,8 @@ DB_PORT=3306
 DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
-
+```
+``` text
 MAIL_MAILER=smtp
 MAIL_HOST=           //メールサーバーアドレス入力
 MAIL_PORT=           //メッセージの送信ポート
@@ -67,8 +68,8 @@ MAIL_PASSWORD=       //メールサーバーのパスワード
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=  //送信元のメールアドレス
 MAIL_FROM_NAME=     //メールの送信者に表示される名前
-
 ```
+
 5. アプリケーションキーの作成
 ``` bash
 php artisan key:generate
@@ -85,4 +86,5 @@ php artisan db:seed
 ```
 
 ## 他
-- ユーザー一覧とユーザー別勤怠表示では権限により閲覧を制限していますが、今回はユーザー登録時に全員に権限を付与し、閲覧可能としています。
+- ユーザー一覧とユーザー別勤怠表表示では権限により閲覧を制限していますが、今回はユーザー登録時に全員に権限を付与し、閲覧可能としています。
+- ユーザー別勤怠表の表示では、該当するユーザーが複数いる場合、検索に手動でインプットに入力し、検索ボタンを押してください。

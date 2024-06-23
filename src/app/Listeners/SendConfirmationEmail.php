@@ -26,8 +26,8 @@ class SendConfirmationEmail implements ShouldQueue
      * @param  Illuminate\Auth\Events\Registered  $event
      * @return void
      */
-    public function handle(Registered $event)
-    {
-        Mail::to($event->user->email)->send(new ConfirmEmail($event->user));
-    }
+    //public function handle(Registered $event)
+    //{
+    //    Mail::to($event->user->email)->send(new ConfirmEmail($event->user));
+    //}
 }
