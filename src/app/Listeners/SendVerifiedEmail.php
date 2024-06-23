@@ -26,8 +26,8 @@ class SendVerifiedEmail
      * @param  \Illuminate\Auth\Events\Verified  $event
      * @return void
      */
-    public function handle(Verified $event)
-    {
-        Mail::to($event->user->email)->send(new VerifiedEmail($event->user));
-    }
+    //public function handle(Verified $event)
+    //{
+    //    Mail::to($event->user->email)->send(new VerifiedEmail($event->user));
+    //}
 }

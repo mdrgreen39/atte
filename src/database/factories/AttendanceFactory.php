@@ -25,8 +25,8 @@ class AttendanceFactory extends Factory
             'work_date' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'start_work' => $this->faker->datetime(),
             'end_work' => $this->faker->datetime(),
-            'total_break' => $this->faker->datetime(),
-            'total_work' => $this->faker->datetime(),
+            'total_break' => $this->faker->time(),
+            'total_work' => $this->faker->time(),
         ];
     }
 }

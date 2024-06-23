@@ -38,8 +38,8 @@ class AttendancesTableSeeder extends Seeder
                     'work_date' => $date,
                     'start_work' => $faker->datetime(),
                     'end_work' => $faker->datetime(),
-                    'total_break' => $faker->datetime(),
-                    'total_work' => $faker->datetime(),
+                    'total_break' => $faker->time(),
+                    'total_work' => $faker->time(),
                 ]);
             }
         } else {
