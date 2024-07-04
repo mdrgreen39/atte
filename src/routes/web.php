@@ -1,6 +1,5 @@
 <?php
 
-use App\Mail\MailTest;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthenticatedController;
 use App\Http\Controllers\AttendanceController;
@@ -8,7 +7,7 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\App;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +72,11 @@ Route::group(['middleware' => ['permission:edit']], function() {
 
 //メールテスト用
 Route::get('/test-email', function () {
+    if (App::environment('production') && !config('mail.test_mode')) {
+
+        return 'Test email is disabled in production';
+    }
+
     Mail::raw('This is a test email', function ($message) {
         //to('')に送信先のメールアドレスを入力：例('xxx@example.com')
         $message->to('imakoko39@gmail.com')

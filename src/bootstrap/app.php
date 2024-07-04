@@ -41,7 +41,7 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
-if(isset($_SERVER['SERVER_NAME']) && ($_SERVER['SEVER_NAME'] === 'production.myadmin.com')) {
+if(isset($_SERVER['SERVER_NAME']) && ($_SERVER['SERVER_NAME'] === 'production.myadmin.com')) {
     $app->loadEnvironmentFrom('env/.env.production');
 } else {
     $app->loadEnvironmentFrom('env/.env.local');

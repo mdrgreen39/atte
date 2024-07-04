@@ -1,5 +1,5 @@
 # Atte(アット：勤怠管理アプリケーション)
-## 概要説明(どんなアプリか)
+## 概要説明
 ![art](atte-stamp.png)
 - 従業員の出退勤や休憩時間、労働時間を記録・管理するためのツールです。
   - ユーザー登録
@@ -48,7 +48,7 @@
 
 ## 環境構築
 **Dockerビルド**
-1. `git@github.com:mdrgreen39/atte.git`
+1. `git clone git@github.com:mdrgreen39/atte.git`
 2. DockerDesktopアプリを立ち上げる
 3. `docker-compose up -d --build`
 
@@ -66,7 +66,7 @@ mysql:
 2. `composer install`
 3. 「env」ディレクトリを作成
 4. 「env」ディレクトリに「.env.local」「.env.production」2つのファイルを作成
-  - 「.env.example」ファイルを「.env.local」「.env.production」ファイルに命名変更。または、新しく「.env.local」 「.env.production」ファイルを作成
+   - 「.env.example」ファイルを「.env.local」「.env.production」ファイルに命名変更。または、新しく「.env.local」 「.env.production」ファイルを作成
 5. 「.env.local」「.env.production」に以下の環境変数を追加
 - .env.local
 ``` text
@@ -93,7 +93,7 @@ DB_DATABASE=
 DB_USERNAME=
 DB_PASSWORD=
 ```
-- メール設定
+- メール設定 (「.env.local」「.env.production」共通)
   - gmailの設定で以下の設定を行う必要があります。<br>
     - 2段階認証プロセスを「オン」にして「アプリパスワード」を作成、そのパスワードを指定します。<br>
     - 設定方法詳細：[Googleアカウントヘルプ](https://support.google.com/accounts/answer/185833?hl=ja&authuser=1)
@@ -107,6 +107,11 @@ MAIL_PASSWORD=       //アプリパスワード
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=  //送信元のメールアドレス
 MAIL_FROM_NAME=     //メールの送信者に表示される名前
+```
+  - 本番環境でのメール送信テスト
+    - テストを行う場合は「true」にし、テストが終了したら「false」に変更
+``` text
+MAIL_TEST_MODE=false
 ```
 
 5. アプリケーションキーの作成
@@ -127,7 +132,8 @@ php artisan db:seed
 ## URL
 - 開発環境：http://localhost/
 - phpMyAdmin:http://localhost:8080/
+- 開発環境でのメールテスト：http://localhost/test-email
 
 ## 他
-- ユーザー一覧とユーザー別勤怠表表示では権限により閲覧を制限していますが、今回はユーザー登録時に全員に役割(role:user)と権限(permission:edit)を付与し、閲覧可能としています。
-- ユーザー別勤怠表の表示では、該当するユーザーが複数いる場合、検索に手動でインプットに入力し、検索ボタンを押してください。
+- ユーザー一覧とユーザー別勤怠一覧は権限により閲覧を制限していますが、今回はユーザー登録時に全員に役割(role:user)と権限(permission:edit)を付与し、閲覧可能としています。
+- ユーザー別勤怠一覧の表示では、該当するユーザーが複数いる場合、検索に手動でインプットに入力し、検索ボタンを押してください。

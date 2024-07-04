@@ -115,4 +115,5 @@ return [
         ],
     ],
 
+    'test_mode' => env('MAIL_TEST_MODE', false),
 ];
