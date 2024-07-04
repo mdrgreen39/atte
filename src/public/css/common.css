@@ -17,15 +17,6 @@ input::placeholder {
     color: #909090;
 }
 
-
-/* .container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-}
-*/
-
 /* ヘッダー */
 .header {
     position: fixed;

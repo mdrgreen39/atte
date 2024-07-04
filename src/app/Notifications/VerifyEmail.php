@@ -2,13 +2,10 @@
 
 namespace App\Notifications;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Auth\Notifications\VerifyEmail as VerifyEmailBase;
-use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\URL;
 
 class VerifyEmail extends VerifyEmailBase implements ShouldQueue
@@ -61,13 +58,11 @@ class VerifyEmail extends VerifyEmailBase implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
         return (new MailMessage)
                     ->subject('Confirm Your Email Address')
                     ->line('以下のリンクをクリックして、メールアドレスを確認してください：')
                     ->action('Confirm Email', $this->verificationUrl($notifiable))
                     ->line('Thank you for using our application!');
-
     }
 
     /**

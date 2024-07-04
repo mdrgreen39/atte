@@ -22,7 +22,9 @@
         </li>
     </ul>
 </nav>
+
 @else
+
 <nav class="header-nav">
     <ul class="header-nav__list">
         <li class="header-nav__item"><a class="header-nav__link" href="{{ route('stamp') }}">ホーム</a></li>
@@ -37,7 +39,6 @@
 </nav>
 @endcan
 @endsection
-
 
 @section('content')
 <div class="stamp-form">
@@ -66,21 +67,18 @@
         @endif
     </div>
     <div class="stamp-form__form">
-
         <form class="stamp-form__start-work " action="{{ route('start-work') }}" method="post">
             @csrf
             <button class="stamp-form__button-startwork stamp-form__button" type="submit" name="start_work" id="start_work" value="start_work">
                 勤務開始
             </button>
         </form>
-
         <form class="stamp-form__end-work" action="{{ route('end-work') }}" method="post">
             @csrf
             <button class="stamp-form__button-endwork stamp-form__button" type="submit" name="end_work" id="end_work" value="end_work">
                 勤務終了
             </button>
         </form>
-
         <form class="stamp-form__start-break" action="{{ route('start-break') }}" method="post">
             @csrf
             <button class="stamp-form__button-startbreak stamp-form__button" type="submit" name="start_break" id="start_break" value="start_break">
@@ -95,4 +93,5 @@
         </form>
     </div>
 </div>
+
 @endsection('content')

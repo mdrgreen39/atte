@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -36,6 +35,5 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 必要に応じて "user" ロールから "edit" パーミッションを削除
         //$userRole->revokePermissionTo($editPermission);
-
     }
 }

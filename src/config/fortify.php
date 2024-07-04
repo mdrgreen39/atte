@@ -1,12 +1,8 @@
 <?php
 
-use App\Http\Controllers\EmailVerificationController;
 use App\Actions\Fortify\CreateNewUser;
-use Laravel\Fortify\Contracts\RegisterResponse;
-use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Laravel\Fortify\Features;
-use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 
 return [
 
@@ -151,21 +147,14 @@ return [
 
     'features' => [
         Features::registration(),
-        //Features::resetPasswords(),
         Features::emailVerification(),
-        //Features::updateProfileInformation(),
-        //Features::updatePasswords(),
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,
-            // 'window' => 0,
         ]),
     ],
 
     'register' => [
         'create' => CreateNewUser::class,
     ],
-
-    //'verify_email' => EmailVerificationController::class,
-
 ];

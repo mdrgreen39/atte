@@ -71,5 +71,4 @@
     </div>
 </div>
 
-
 @endsection('content')
