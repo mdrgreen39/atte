@@ -10,7 +10,7 @@
         <li class="header-nav__item"><a class="header-nav__link" href="{{ route('stamp') }}">ホーム</a></li>
         <li class="header-nav__item"><a class="header-nav__link" href="{{ route('attendance') }}">日付一覧</a></li>
         <li class="header-nav__item"><a class="header-nav__link" href="{{ route('users.index') }}">ユーザー一覧</a></li>
-        <li class="header-nav__item"><a class="header-nav__link" href="{{ route('users.attendance_list', Auth::id()) }}">ユーザー勤怠一覧</a></li>
+        <li class="header-nav__item"><a class="header-nav__link" href="{{ route('users.attendance_list', Auth::id()) }}">ユーザー別勤怠一覧</a></li>
         <li class="header-nav__item">
             <form class="header-nav__button" action="/logout" method="post" novalidate>
                 @csrf
@@ -26,6 +26,10 @@
 
 <div class="attendance-list">
     <div class="attendance-list__inner">
+        <h2 class="attendance-list__text">ユーザー別勤怠一覧</h2>
+        <p class="attendance-list__about">
+            IDもしくは名前を入力して検索してください
+        </p>
         <div class="attendance-list__item">
             <form class="attendance-list__search" action=" {{ route('users.attendance_list.search') }}" method="get">
                 @csrf
@@ -37,10 +41,12 @@
                         <input class="attendance-list__search-input" type="text" name="name" id="name" placeholder="名前" value="{{ request('name') }}">
                     </div>
                     <div class="attendance-list__search-input-label">
-                        <input class="attendance-list__search-input" type="date" name="start_date" id="start_date" value="{{ request('start_date') }}">
+                        <p class="attendance-list__search-text">期間</p>
+                        <input class="attendance-list__search-input" type="date" name="start_date" id="start_date" max="9999-12-31" value="{{ request('start_date') }}">
                     </div>
                     <div class="attendance-list__search-input-label">
-                        <input class="attendance-list__search-input" type="date" name="end_date" id="end_date" value="{{ request('end_date') }}">
+                        <p class="attendance-list__search-text">〜</p>
+                        <input class="attendance-list__search-input" type="date" name="end_date" id="end_date" max="9999-12-31" value="{{ request('end_date') }}">
                     </div>
                     <div class="attendance-list__search-action">
                         <button class="attendance-list__search-button" type="submit">検索</button>
