@@ -163,10 +163,6 @@ class AttendanceController extends Controller
             // 休憩時間を引いた総勤務時間を計算
             $totalWorkDuration -= $totalBreakDuration;
 
-            // 総勤務時間と休憩時間を保存
-            //$totalWork = $today->format('H:i:s', $totalWorkDuration);
-            //$totalBreak = $today->format('H:i:s', $totalBreakDuration);
-
             $newAttendance->total_break = $this->formatTimeFromSeconds($totalBreakDuration);
             $newAttendance->total_work = $this->formatTimeFromSeconds($totalWorkDuration);
             $newAttendance->save();

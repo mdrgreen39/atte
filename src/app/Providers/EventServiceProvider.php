@@ -23,19 +23,12 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-            //トークン使ったメール確認ル
-            //SendConfirmationEmail::class,
             AssignUserRole::class,
         ],
 
         Verified::class => [
             SendWelcomeEmail::class,
         ],
-
-        //Verified::class => [
-        //    SendVerifiedEmail::class,
-        //],
-
     ];
 
     /**

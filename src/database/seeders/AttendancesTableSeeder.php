@@ -18,17 +18,26 @@ class AttendancesTableSeeder extends Seeder
      */
     public function run()
     {
+        //全てのユーザーのattendanceデータを作成
+        //日付指定
         //$date = Carbon::create(2024, 5, 28);
+
+        //today or tomorrowの場合
         //$date = Carbon::tomorrow();
+
         //Attendance::factory()->count(10)->create([
         //    'work_date' => $date,
         //]);
 
+
+        //特定のユーザーのattendanceデータを作成
         $faker = FakerFactory::create();
+        //IDを指定
         $userId = 13;
 
         $user = User::find($userId);
 
+        //特定のユーザーの30日分ののデータ作成
         if ($user) {
             for ($i = 0; $i < 30; $i++) {
                 $date = Carbon::now()->subDays($i)->toDateString();

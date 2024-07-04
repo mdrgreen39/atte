@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Database\Seeder;
-use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,12 +15,19 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            RolesAndPermissionsSeeder::class,
-            UserSeeder::class,
-            AdminUserSeeder::class,
-            AttendancesTableSeeder::class,
-
+            UserRolesAndPermissionsSeeder::class,
         ]);
+
+        if (App::environment('local')) {
+            $this->call([
+                //UserSeeder::class,
+                //AttendancesTableSeeder::class,
+                RolesAndPermissionsSeeder::class,
+                //AdminUserSeeder::class,
+                //UserRolesSeeder::class,
+
+            ]);
+        }
 
 
     }

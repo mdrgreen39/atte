@@ -25,7 +25,14 @@
 
 .attendance-list__text {
     white-space: nowrap;
+    margin-bottom: 8px;
     font-size: 24px;
+}
+
+.attendance-list__about {
+    white-space: nowrap;
+    margin-bottom: 16px;
+    color: #214be0;
 }
 
 .attendance-list__search {
@@ -47,6 +54,14 @@
 .attendance-list__search-input-label:not(:last-child) {
     margin-right: 8px;
 }
+
+.attendance-list__search-text {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+}
+
+
 
 .attendance-list__search-action {
     display: flex;
@@ -128,4 +143,8 @@
     text-align: center;
     white-space: nowrap;
     width: 100%;
+}
+
+.attendance-list__status-text {
+    color: #000000;
 }
