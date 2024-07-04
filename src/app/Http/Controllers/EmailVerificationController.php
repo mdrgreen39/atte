@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Controller;
-use App\Events\EmailVerified;
 use App\Models\User;
 
 
@@ -42,7 +39,6 @@ class EmailVerificationController extends Controller
         Auth::logout();
 
         return redirect('/login')->with('status', 'メールアドレスを確認しました!ログイン画面よりログインしてください');
-
     }
 
     public function showResendForm()

@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Auth\StatefulGuard;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Laravel\Fortify\Actions\AttemptToAuthenticate;
 use Laravel\Fortify\Actions\CanonicalizeUsername;
 use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
@@ -23,7 +20,6 @@ use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Requests\LoginRequest;
 use App\Models\User;
-use Throwable;
 
 class AuthenticatedController extends Controller
 {
@@ -77,17 +73,11 @@ class AuthenticatedController extends Controller
                 return redirect()->route('verification.notice');
         }
 
-
         return $this->loginPipeline($request)->then(function ($request) {
 
             return app(LoginResponse::class);
         });
-
     }
-
-
-
-
 
     /**
      * Get the authentication pipeline instance.

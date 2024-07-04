@@ -48,7 +48,6 @@
 .attendance-list__search-input-label {
     display: flex;
     white-space: nowrap;
-    /* margin-right: 8px; */
 }
 
 .attendance-list__search-input-label:not(:last-child) {

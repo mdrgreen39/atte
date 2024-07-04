@@ -100,7 +100,6 @@
         {{ $attendances->appends(request()->query())->links('vendor.pagination.custom') }}
 
     </div>
-
 </div>
 
 @endsection('content')

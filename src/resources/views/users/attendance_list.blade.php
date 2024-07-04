@@ -23,7 +23,6 @@
 
 @section('content')
 
-
 <div class="attendance-list">
     <div class="attendance-list__inner">
         <h2 class="attendance-list__text">ユーザー別勤怠一覧</h2>
@@ -142,6 +141,5 @@
         @endif
     </div>
 </div>
-
 
 @endsection('content')

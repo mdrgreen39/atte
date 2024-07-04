@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attendance;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -24,7 +22,6 @@ class UserController extends Controller
         }
 
         $query = User::query();
-
 
         if ($request->filled('name')) {
             $name = $request->name;
@@ -108,6 +105,5 @@ class UserController extends Controller
         }
 
         return view('users.attendance_list', compact('users', 'attendanceList', 'selectedUser', 'hasSearchCondition'));
-
     }
 }

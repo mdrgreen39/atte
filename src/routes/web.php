@@ -1,24 +1,14 @@
 <?php
 
-use App\Events\EmailVerified;
 use App\Mail\MailTest;
-use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
-use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
-use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
-use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthenticatedController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\UserController;
-use App\Models\Attendance;
-use GuzzleHttp\Middleware;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -51,36 +41,14 @@ Route::group(['middleware' => 'web'], function () {
         ->name('logout');
 });
 
-
-
 Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
     ->middleware(['signed', 'throttle:6.1'])
     ->name('verification.verify');
-
-//期限付きなしメール確認
-//Route::get('/email/verify/{token}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
 
 Route::get('email/verify', [EmailVerificationController::class, 'show'])->name('verification.notice');
 
 Route::get('/email/resend', [EmailVerificationController::class, 'showResendForm'])->name('verification.resend');
 Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend.post');
-
-
-//Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
-//    ->middleware(['auth', 'throttle:6,1'])
-//    ->name('verification.send');
-
-
-
-//メールアドレス確認
-//Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-//    ->middleware(['auth', 'signed'])
-//    ->name('verification.verify');
-
-//メールアドレス確認画面表示
-//Route::get('/email/verify', [EmailVerificationPromptController::class, '__invoke'])
-//   ->middleware('auth')
-//    ->name('verification.notice');
 
 Route::middleware('auth')->group(function ()
 {
@@ -101,38 +69,17 @@ Route::group(['middleware' => ['permission:edit']], function() {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{id}/attendance_list', [UserController::class, 'attendanceList'])->name('users.attendance_list');
     Route::get('/users/attendance_list', [UserController::class, 'searchAttendanceList'])->name('users.attendance_list.search');
-    //Route::get('/users/filter', [UserController::class, 'filter'])->name('attendance_list.filter');
 });
 
-
-Route::get('/mail', function () {
-    $mail_text = "テストです";
-    Mail::to('to_address@example.com')->send(new MailTest($mail_text));
-});
-
-//Route::get('/test-email', function () {
- //   Mail::raw('This is a test email', function ($message) {
- //       $message->to('imakoko39+sub@gmail.com')
- //       ->subject('Test Email');
- //   });
-
-  //  return 'Test email sent!';
-//});
-
-
+//メールテスト用
 Route::get('/test-email', function () {
-    Log::info('Sending test email');
+    Mail::raw('This is a test email', function ($message) {
+        //to('')に送信先のメールアドレスを入力：例('xxx@example.com')
+        $message->to('imakoko39@gmail.com')
+        ->subject('Test Email');
+    });
 
-    try {
-        Mail::raw('This is a test email', function ($message) {
-            $message->to('info@example.com')
-                ->subject('Test Email');
-        });
-
-        Log::info('Test email sent successfully');
-    } catch (\Exception $e) {
-        Log::error('Failed to send test email: ' . $e->getMessage());
-    }
-
-    return 'Test email sent';
+    return 'Test email sent!';
 });
+
+

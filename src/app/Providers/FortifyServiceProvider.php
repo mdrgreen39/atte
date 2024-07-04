@@ -4,17 +4,11 @@ namespace App\Providers;
 
 use App\Actions\Fortify\RegisterResponse;
 use App\Actions\Fortify\CreateNewUser;
-use App\Actions\Fortify\ResetUserPassword;
-use App\Actions\Fortify\UpdateUserPassword;
-use App\Actions\Fortify\UpdateUserProfileInformation;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
 use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
@@ -22,13 +16,11 @@ use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthenticatedController;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 class FortifyServiceProvider extends ServiceProvider
 {
-
     public function boot(): void
     {
         Fortify::createUsersUsing(CreateNewUser::class);

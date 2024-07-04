@@ -2,15 +2,9 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Http\Requests\StampRequest;
-use App\Http\Requests\RegisterRequest;
 use App\Models\BreakTime;
-use App\Models\User;
 use App\Models\Attendance;
-use Carbon\CarbonImmutable;
 use Carbon\Carbon;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -24,7 +18,6 @@ class AttendanceController extends Controller
 
         return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
     }
-
 
     /* 打刻ページ表示 */
     public function index(Request $request)
@@ -168,7 +161,6 @@ class AttendanceController extends Controller
             $newAttendance->save();
 
             return redirect()->back()->with('message', '勤務終了時間が登録されました');
-
         }
 
         // 日付を跨いでいない場合、通常の処理
@@ -190,10 +182,6 @@ class AttendanceController extends Controller
 
         // 休憩時間を引いた総勤務時間を計算
         $totalWorkDuration -= $totalBreakDuration;
-
-        // 総勤務時間と休憩時間を保存
-        //$totalWork = $today->format('H:i:s', $totalWorkDuration);
-        //$totalBreak = $today->format('H:i:s', $totalBreakDuration);
 
         $currentAttendance->total_break = $this->formatTimeFromSeconds($totalBreakDuration);
         $currentAttendance->total_work = $this->formatTimeFromSeconds($totalWorkDuration);
