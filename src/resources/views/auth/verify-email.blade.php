@@ -12,7 +12,7 @@
     <div class="verification-form__inner">
         <div class="verification-form__form">
             <div class="verification-form__group">
-                <p class="verification-form__text">登録ありがとうございます!</p>
+                <p class="verification-form__text">登録ありがとうございます！</p>
             </div>
             <div class="verification-form__group">
                 <p>ログインするにはメールアドレスの確認が必要です。登録したメールアドレスにメールを送信していますので、メール内のリンクをクリックしてください。</p>

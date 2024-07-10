@@ -77,3 +77,21 @@
 .attendance__table td {
     vertical-align: middle;
 }
+
+.attendance__status {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.attendance__status-text {
+    color: #000000;
+}

@@ -105,10 +105,11 @@ MAIL_PORT=587
 MAIL_USERNAME=       //送信元のメールアドレス
 MAIL_PASSWORD=       //アプリパスワード
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=  //送信元のメールアドレス
-MAIL_FROM_NAME=     //メールの送信者に表示される名前
+MAIL_FROM_ADDRESS=   //送信元のメールアドレス
+MAIL_FROM_NAME=""    //メールの送信者に表示される名前
 ```
   - 本番環境でのメール送信テスト
+    -「.env.production」に`MAIL_TEST_MODE=false`を追加
     - テストを行う場合は「true」にし、テストが終了したら「false」に変更
 ``` text
 MAIL_TEST_MODE=false

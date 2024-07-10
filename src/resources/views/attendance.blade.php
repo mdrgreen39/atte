@@ -64,6 +64,7 @@
                 <th class="attendance__label">休憩時間</th>
                 <th class="attendance__label">勤務時間</th>
             </tr>
+            @if($attendances->isNotEmpty())
             @foreach($attendances as $attendance)
             <tr class="attendance__row">
                 <td class="attendance__data">
@@ -98,6 +99,12 @@
         </table>
 
         {{ $attendances->appends(request()->query())->links('vendor.pagination.custom') }}
+
+        @else
+        <div class="attendance__status">
+            <p class="attendance__status-text">No attendance records found.</p>
+        </div>
+        @endif
 
     </div>
 </div>
