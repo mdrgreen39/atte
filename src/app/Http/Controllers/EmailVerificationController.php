@@ -27,7 +27,7 @@ class EmailVerificationController extends Controller
 
         // ユーザーがすでにメールを確認済みである場合
         if ($user->hasVerifiedEmail()) {
-            return redirect('/login')->with('status', 'このメールアドレスはすでに確認済みです!ログイン画面からログインしてください');
+            return redirect('/login')->with('status', 'このメールアドレスはすでに確認済みです！ログイン画面からログインしてください');
         }
 
         // メールアドレスを確認
@@ -38,7 +38,7 @@ class EmailVerificationController extends Controller
         // ログアウトしてリダイレクト
         Auth::logout();
 
-        return redirect('/login')->with('status', 'メールアドレスを確認しました!ログイン画面よりログインしてください');
+        return redirect('/login')->with('status', 'メールアドレスを確認しました！ログイン画面よりログインしてください');
     }
 
     public function showResendForm()
@@ -55,11 +55,11 @@ class EmailVerificationController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if ($user->hasVerifiedEmail()) {
-            return redirect()->route('login')->with('status', 'このメールアドレスはすでに確認済みです!ログイン画面からログインしてください');
+            return redirect()->route('login')->with('status', 'このメールアドレスはすでに確認済みです！ログイン画面からログインしてください');
         }
 
         $user->sendEmailVerificationNotification();
 
-        return redirect()->route('login')->with('status', '確認メールを送信しました。メールボックスをご確認ください');
+        return redirect()->route('login')->with('status', '確認メールを送信しました！メールボックスをご確認ください');
     }
 }

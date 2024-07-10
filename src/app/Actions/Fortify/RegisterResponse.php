@@ -11,6 +11,6 @@ class RegisterResponse implements RegisterResponseContract
     {
         return $request->wantsJson()
             ? new JsonResponse('', 201)
-            : redirect()->route('login')->with('status', 'メールを送信しました!ログインにはメールアドレスの確認が必要です。メールボックスを確認してください');
+            : redirect()->route('login')->with('status', 'メールを送信しました！ログインにはメールアドレスの確認が必要です、メールボックスを確認してください');
     }
 }

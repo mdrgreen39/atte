@@ -233,6 +233,7 @@ class AttendanceController extends Controller
         $user = Auth::user();
         $today = Carbon::today();
         $yesterday = Carbon::yesterday();
+        $now = now();
 
         $attendance = Attendance::where('user_id', $user->id)
             ->where(function ($query) use ($today, $yesterday) {
@@ -249,9 +250,24 @@ class AttendanceController extends Controller
                 ->first();
 
             if ($unfinishedBreak) {
-                // 休憩終了を登録
-                $unfinishedBreak->end_break = now();
-                $unfinishedBreak->save();
+                $startBreak = Carbon::parse($unfinishedBreak->start_break);
+                if ($startBreak->isSameDay($now)) {
+                    // 休憩終了を登録
+                    $unfinishedBreak->end_break = now();
+                    $unfinishedBreak->save();
+                } else {
+                    //休憩時間が日付を跨いだ場合
+                    $endOfDay = $startBreak->copy()->endOfDay();
+                    $unfinishedBreak->end_break = $endOfDay;
+                    $unfinishedBreak->save();
+
+                    //翌日の休憩開始を新たに作成
+                    BreakTime::create([
+                        'attendance_id' => $attendance->id,
+                        'start_break' => $endOfDay->copy()->addSecond(),
+                        'end_break' => $now
+                    ]);
+                }
 
                 return redirect()->back()->with('message', '休憩終了時間を登録しました');
             }

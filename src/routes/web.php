@@ -79,7 +79,7 @@ Route::get('/test-email', function () {
 
     Mail::raw('This is a test email', function ($message) {
         //to('')に送信先のメールアドレスを入力：例('xxx@example.com')
-        $message->to('imakoko39@gmail.com')
+        $message->to('')
         ->subject('Test Email');
     });
 
