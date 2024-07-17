@@ -16,7 +16,6 @@
 </head>
 
 <body>
-
     <header class="header">
         <h1 class="header__logo">Atte</h1>
         @yield('nav')

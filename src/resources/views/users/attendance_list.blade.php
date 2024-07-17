@@ -22,7 +22,6 @@
 @endsection
 
 @section('content')
-
 <div class="attendance-list">
     <div class="attendance-list__inner">
         <h2 class="attendance-list__text">ユーザー別勤怠一覧</h2>
@@ -51,7 +50,6 @@
                         <button class="attendance-list__search-button" type="submit">検索</button>
                         <button class="attendance-list__search-button" type="submit" name="reset" value="true">リセット</button>
                     </div>
-
                 </div>
             </form>
 
@@ -59,15 +57,14 @@
             $users = $users ?? collect();
             @endphp
 
-            @if ($hasSearchCondition)
-            @if ($users->isNotEmpty())
+            @if($users->isNotEmpty() && !$selectedUser)
             <h2 class="attendance-list__text">検索結果</h2>
             <table class="attendance-list__table">
                 <tr class="attendance-list__row">
                     <th class="attendance-list__label">ID</th>
                     <th class="attendance-list__label">名前</th>
                 </tr>
-                @foreach ($users as $user)
+                @foreach($users as $user)
                 <tr class="attendance-list__row">
                     <td class="attendance-list__data">{{ $user->id }}</td>
                     <td class="attendance-list__data">{{ $user->name }}</td>
@@ -77,40 +74,62 @@
 
             {{ $users->appends(request()->query())->links('vendor.pagination.custom') }}
 
-            @elseif ($selectedUser)
+            @elseif($selectedUser)
             <h2 class="attendance-list__text">{{ $selectedUser->name }}の勤怠表</h2>
-            <table class="attendance-list__table">
-                <tr class="attendance-list__row">
-                    <th class="attendance-list__label">日付</th>
-                    <th class="attendance-list__label">出勤時間</th>
-                    <th class="attendance-list__label">退勤時間</th>
-                    <th class="attendance-list__label">休憩時間</th>
-                    <th class="attendance-list__label">勤務時間</th>
-                </tr>
-                @foreach ($attendanceList as $attendance)
-                <tr class="attendance-list__row">
-                    <td class="attendance-list__data">{{ $attendance->work_date }}</td>
-                    <td class="attendance-list__data">{{ $attendance->start_work ? $attendance->start_work->format('H:i:s') : '-' }}</td>
-                    <td class="attendance-list__data">{{ $attendance->end_work ? $attendance->end_work->format('H:i:s') : '-' }}</td>
-                    <td class="attendance-list__data">{{ $attendance->total_break ? $attendance->total_break->format('H:i:s') : '-' }}</td>
-                    <td class="attendance-list__data">{{ $attendance->total_work ? $attendance->total_work->format('H:i:s') : '-' }}</td>
-                </tr>
-                @endforeach
-            </table>
-
-            {{ $attendanceList->appends(request()->query())->links('vendor.pagination.custom') }}
-
-            @else
-            <div class="attendance-list__status">
-                <p class="attendance-list__status-text">No attendance users found.</p>
-            </div>
-            @endif
-            @endif
-
-
-
-
         </div>
-    </div>
 
-    @endsection('content')
+        @if ($attendanceList->isNotEmpty())
+        <table class="attendance-list__table">
+            <tr class="attendance-list__row">
+                <th class="attendance-list__label">日付</th>
+                <th class="attendance-list__label">出勤時間</th>
+                <th class="attendance-list__label">退勤時間</th>
+                <th class="attendance-list__label">休憩時間</th>
+                <th class="attendance-list__label">勤務時間</th>
+            </tr>
+            @foreach($attendanceList as $attendance)
+            <tr class="attendance-list__row">
+                <td class="attendance-list__data">
+                    {{ $attendance->work_date }}
+                </td>
+                <td class="attendance-list__data">
+                    {{ $attendance->start_work->format('H:i:s')  }}
+                </td>
+                <td class="attendance-list__data">
+                    @if($attendance->end_work)
+                    {{ $attendance->end_work->format('H:i:s')  }}
+                    @else
+                    -
+                    @endif
+                </td>
+                <td class="attendance-list__data">
+                    @if($attendance->total_break)
+                    {{ $attendance->total_break->format('H:i:s')  }}
+                    @else
+                    -
+                    @endif
+                </td>
+                <td class="attendance-list__data">
+                    @if($attendance->total_work)
+                    {{ $attendance->total_work->format('H:i:s')  }}
+                    @else
+                    -
+                    @endif
+                </td>
+            </tr>
+            @endforeach
+        </table>
+        {{ $attendanceList->appends(request()->query())->links('vendor.pagination.custom') }}
+        @else
+        <div class="attendance-list__status">
+            <p class="attendance-list__status-text">No attendance records found.</p>
+        </div>
+        @endif
+        @else
+        <div class="attendance-list__status">
+            <p class="attendance-list__status-text">No attendance users found.</p>
+        </div>
+        @endif
+    </div>
+</div>
+@endsection('content')
