@@ -22,11 +22,9 @@
 @endsection
 
 @section('content')
-
 <div class="user">
     <div class="user-inner">
         <div class="user-list">
-
             <form class="user-list__search" action=" {{ route('users.index') }}" method="get">
                 @csrf
                 <div class="user-list__search-input-wrapper">
@@ -67,8 +65,6 @@
             <p class="user-list__status-text">No users found.</p>
         </div>
         @endif
-
     </div>
 </div>
-
 @endsection('content')

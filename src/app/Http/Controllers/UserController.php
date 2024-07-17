@@ -45,36 +45,40 @@ class UserController extends Controller
         $this->authorize('edit');
 
         if ($request->has('reset')) {
+            session()->forget('selectedUser');
             return redirect('/users/attendance_list');
         }
 
-        $hasSearchCondition = $request->filled('id') || $request->filled('name') || $request->filled('start_date') || $request->filled('end_date');
+        $query = User::query();
 
-        $users = collect();
+        if ($request->filled('id')) {
+            $query->where('id', $request->id);
+        }
+
+        if ($request->filled('name')) {
+            $name = $request->name;
+            $names = preg_replace('/\s|　+/', '', $name);
+            $query->where(DB:: raw('REPLACE(REPLACE(name, " ", ""), "　", "")'), 'like', '%' . $names . '%');
+        }
+
+        $users = $query->paginate(5)->appends($request->except('page'));
+
         $selectedUser = null;
         $attendanceList = collect();
 
-        if($hasSearchCondition) {
-            $query = User::query();
+        if ($users->count() > 1) {
+            session()->forget('selectedUser');
+        }
 
-            if ($request->filled('id')) {
-                $query->where('id', $request->id);
-            }
-
-            if ($request->filled('name')) {
-                $name = $request->name;
-                $names = preg_replace('/\s|　+/', '', $name);
-                $query->where(DB:: raw('REPLACE(REPLACE(name, " ", ""), "　", "")'), 'like', '%' . $names . '%');
-            }
-
-            //if ($request->filled('id') && $request->filled('name')) {
-                $users = $query->paginate(5);
-            //} else {
-                $users = $query->paginate(5);
-            //}
-
+        if ($request->filled('id') || $request->filled('name')) {
             if ($users->count() === 1) {
                 $selectedUser = $users->first();
+                session(['selectedUser' => $selectedUser]);
+            } else {
+                $selectedUser = session('selectedUser');
+            }
+
+            if ($selectedUser) {
                 $userAttendance = $selectedUser->attendances();
 
                 if ($request->filled('start_date') && $request->filled('end_date')) {
@@ -85,11 +89,13 @@ class UserController extends Controller
                     $userAttendance->where('work_date', '<=', $request->end_date);
                 }
 
-                
-                $attendanceList = $userAttendance->paginate(5);
+                $attendanceList = $userAttendance->paginate(5)->appends($request->except('page'));
             }
+        } else {
+            session()->forget('selectedUser');
+            $users = collect();
         }
 
-        return view('users.attendance_list', compact('users', 'attendanceList', 'selectedUser', 'hasSearchCondition'));
+        return view('users.attendance_list', compact('users', 'attendanceList', 'selectedUser'));
     }
 }

@@ -37,7 +37,6 @@
 @endsection
 
 @section('content')
-
 <div class="attendance">
     <div class="attendance-inner">
         <div class="attendance-list">
@@ -105,8 +104,6 @@
             <p class="attendance__status-text">No attendance records found.</p>
         </div>
         @endif
-
     </div>
 </div>
-
 @endsection('content')
